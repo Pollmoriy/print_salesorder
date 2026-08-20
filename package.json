@@ -26,7 +26,8 @@
   "dependencies": {
     "@sap/cds": "^10",
     "@cap-js/hana": "^3",
-    "express": "^4"
+    "express": "^4",
+    "@sap/xssec": "^4"
   },
   "cds": {
     "requires": {
@@ -38,6 +39,20 @@
           "kind": "sqlite",
           "credentials": {
             "url": "db/data.sqlite"
+          }
+        }
+      },
+      "[production]": {
+        "auth": "xsuaa"
+      },
+      "[development]": {
+        "auth": {
+          "kind": "mocked",
+          "users": {
+            "alice": {
+              "password": "alice",
+              "roles": ["authenticated-user"]
+            }
           }
         }
       }
