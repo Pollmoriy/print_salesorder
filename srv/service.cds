@@ -5,8 +5,16 @@ using {printflow.db as db} from '../db/schema';
  * Exposes domain entities as plain OData V4 CRUD projections.
  * No custom handlers, no actions/functions, no business logic yet
  * (that's Stage 2 / feature/business-logic).
+ *
+ * Security foundation (Stage 1, pt. 17): only the anonymous vs.
+ * authenticated distinction is enforced here via XSUAA. Role-based
+ * access (Sales Manager / Production Manager / Administrator) is
+ * introduced later, once UI and services take shape.
  */
-service SalesOrderService @(path: '/odata/v4/sales-order') {
+service SalesOrderService @(
+  path    : '/odata/v4/sales-order',
+  requires: 'authenticated-user'
+) {
 
   entity Customers         as projection on db.Customers;
   entity Products          as projection on db.Products;
