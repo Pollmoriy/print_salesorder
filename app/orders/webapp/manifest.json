@@ -16,7 +16,8 @@
           "odataVersion": "4.0"
         }
       }
-    }
+    },
+    "i18n": "i18n/i18n.properties"
   },
   "sap.ui": {
     "technology": "UI5",
@@ -37,7 +38,9 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "printflow.orders.i18n.i18n"
+          "bundleName": "printflow.orders.i18n.i18n",
+          "supportedLocales": [""],
+          "fallbackLocale": ""
         }
       },
       "": {
