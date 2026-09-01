@@ -1,10 +1,24 @@
 {
+  "welcomeFile": "/printfloworders/index.html",
+  "authenticationMethod": "route",
+  "httpHeaders": [
+    {
+      "Content-Security-Policy": "default-src 'self' https://ui5.sap.com; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://ui5.sap.com; style-src 'self' 'unsafe-inline' https://ui5.sap.com; img-src 'self' https://ui5.sap.com data: blob:; font-src 'self' https://ui5.sap.com data:; connect-src 'self' https://ui5.sap.com;"
+    }
+  ],
   "routes": [
     {
-      "source": "^/(.*)$",
-      "target": "$1",
+      "source": "^/odata/(.*)$",
+      "target": "/odata/$1",
       "destination": "srv-api",
+      "authenticationType": "xsuaa",
       "csrfProtection": true
+    },
+    {
+      "source": "^(.*)$",
+      "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
     }
   ]
 }
