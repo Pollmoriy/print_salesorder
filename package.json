@@ -9,7 +9,7 @@
   "scripts": {
     "watch": "cds watch",
     "build": "cds build --production",
-    "start": "cds run"
+    "start": "cds-serve"
   },
   "devDependencies": {
     "@cap-js/cds-typer": ">=0.1",
