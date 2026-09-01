@@ -1,9 +1,10 @@
 {
   "welcomeFile": "/printfloworders/index.html",
   "authenticationMethod": "route",
-  "httpHeaders": [
+  "responseHeaders": [
     {
-      "Content-Security-Policy": "default-src 'self' https://ui5.sap.com; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://ui5.sap.com; style-src 'self' 'unsafe-inline' https://ui5.sap.com; img-src 'self' https://ui5.sap.com data: blob:; font-src 'self' https://ui5.sap.com data:; connect-src 'self' https://ui5.sap.com;"
+      "name": "Content-Security-Policy",
+      "value": "default-src 'self' https://ui5.sap.com; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://ui5.sap.com; style-src 'self' 'unsafe-inline' https://ui5.sap.com; img-src 'self' https://ui5.sap.com data: blob:; font-src 'self' https://ui5.sap.com data:; connect-src 'self' https://ui5.sap.com;"
     }
   ],
   "routes": [
