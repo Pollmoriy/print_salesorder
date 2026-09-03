@@ -22,7 +22,17 @@ service SalesOrderService @(
   entity Warehouses        as projection on db.Warehouses;
   entity MaterialStocks    as projection on db.MaterialStocks;
 
-  entity SalesOrders       as projection on db.SalesOrders;
+  entity SalesOrders       as projection on db.SalesOrders {
+    *,
+    case status
+      when 'READY'         then 3
+      when 'DELIVERED'     then 3
+      when 'IN_PRODUCTION' then 2
+      when 'SUBMITTED'     then 2
+      when 'CANCELLED'     then 1
+      else 0
+    end as statusCriticality : Integer
+  };
   entity OrderItems        as projection on db.OrderItems;
   entity ProductionOrders  as projection on db.ProductionOrders;
   entity Payments          as projection on db.Payments;
