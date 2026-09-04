@@ -7,3 +7,5 @@ db/*.db
 .env
 .DS_Store
 default-env.json
+db/*.sqlite-shm
+db/*.sqlite-wal
