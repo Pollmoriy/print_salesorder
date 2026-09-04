@@ -33,31 +33,23 @@ annotate service.SalesOrders with @(
     LineItem: [
       { Value: orderNo,               Label: 'Order No' },
       { Value: customer_ID,           Label: 'Customer' },
-      { Value: status,                Label: 'Status',   Criticality: statusCriticality },
-      { Value: urgencyLevel,          Label: 'Urgency' },
+      { Value: status,                Label: 'Status',         Criticality: statusCriticality },
+      { Value: urgencyLevel,          Label: 'Urgency',        Criticality: urgencyCriticality },
       { Value: createdAt,             Label: 'Order Date' },
       { Value: requestedDeliveryDate, Label: 'Delivery Date' },
       { Value: totalAmount,           Label: 'Total' },
-      { Value: paymentStatus,         Label: 'Payment Status' },
+      { Value: paymentStatus,         Label: 'Payment Status', Criticality: paymentCriticality },
     ],
-
-    // Object Page header
-    HeaderInfo: {
-      TypeName      : 'Order',
-      TypeNamePlural: 'Orders',
-      Title         : { Value: orderNo },
-      Description   : { Value: status },
-    },
 
     // Object Page — General Information section
     FieldGroup #GeneralInfo: {
       Data: [
         { Value: customer_ID },
         { Value: createdAt },
-        { Value: urgencyLevel },
+        { Value: urgencyLevel,          Criticality: urgencyCriticality },
         { Value: requestedDeliveryDate },
-        { Value: status },
-        { Value: paymentStatus },
+        { Value: status,                Criticality: statusCriticality },
+        { Value: paymentStatus,         Criticality: paymentCriticality },
       ],
     },
 
@@ -101,7 +93,6 @@ annotate service.SalesOrders with @(
       status,
       customer_ID,
       createdAt,
-      requestedDeliveryDate,
       urgencyLevel,
       paymentStatus,
     ],
@@ -165,7 +156,7 @@ annotate service.ProductionOrders with {
 
 annotate service.ProductionOrders with @(
   UI.LineItem: [
-    { Value: status,              Label: 'Status' },
+    { Value: status,              Label: 'Status', Criticality: productionCriticality },
     { Value: plannedStart,        Label: 'Planned Start' },
     { Value: plannedEnd,          Label: 'Planned End' },
     { Value: estimatedCompletion, Label: 'Estimated Completion' },
@@ -188,7 +179,7 @@ annotate service.Payments with @(
     { Value: amount, Label: 'Amount' },
     { Value: method, Label: 'Method' },
     { Value: paidAt, Label: 'Paid At' },
-    { Value: status, Label: 'Status' },
+    { Value: status, Label: 'Status', Criticality: paymentTxCriticality },
   ]
 );
 
@@ -206,7 +197,7 @@ annotate service.Deliveries with {
 
 annotate service.Deliveries with @(
   UI.LineItem: [
-    { Value: status,         Label: 'Status' },
+    { Value: status,         Label: 'Status', Criticality: deliveryCriticality },
     { Value: address,        Label: 'Address' },
     { Value: scheduledDate,  Label: 'Scheduled Date' },
     { Value: trackingNumber, Label: 'Tracking Number' },
@@ -229,3 +220,34 @@ annotate service.Products with {
   unit @title: 'Unit';
   basePrice @title: 'Base Price';
 };
+
+annotate service.SalesOrders with @(
+  UI.HeaderInfo : {
+    TypeName       : 'Order',
+    TypeNamePlural : 'Orders',
+    Title          : { Value: orderNo },
+    Description    : { Value: customer_ID },
+  },
+  UI.HeaderFacets : [
+    {
+      $Type  : 'UI.ReferenceFacet',
+      ID     : 'StatusFacet',
+      Target : '@UI.FieldGroup#HeaderStatus',
+    },
+    {
+      $Type  : 'UI.ReferenceFacet',
+      ID     : 'TotalFacet',
+      Target : '@UI.FieldGroup#HeaderTotal',
+    },
+  ],
+  UI.FieldGroup #HeaderStatus : {
+    Data : [
+      { Value: status, Criticality: statusCriticality, Label: ' ' },
+    ],
+  },
+  UI.FieldGroup #HeaderTotal : {
+    Data : [
+      { Value: totalAmount, Label: 'Total' },
+    ],
+  },
+);

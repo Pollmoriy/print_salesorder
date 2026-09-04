@@ -166,3 +166,45 @@ entity Deliveries : cuid, managed {
   deliveredAt     : DateTime;
   trackingNumber  : String(50);
 }
+
+@readonly
+entity OrderStatusCodes {
+  key code : OrderStatus;
+      name : String(40);
+}
+
+@readonly
+entity UrgencyCodes {
+  key code : Urgency;
+      name : String(40);
+}
+
+@readonly
+entity PaymentStatusCodes {
+  key code : PaymentStatus;
+      name : String(40);
+}
+
+@readonly
+entity ProductionStatusCodes {
+  key code : ProductionStatus;
+      name : String(40);
+}
+
+@readonly
+entity PaymentMethodCodes {
+  key code : PaymentMethod;
+      name : String(40);
+}
+
+@readonly
+entity PaymentTxStatusCodes {
+  key code : PaymentTxStatus;
+      name : String(40);
+}
+
+@readonly
+entity DeliveryStatusCodes {
+  key code : DeliveryStatus;
+      name : String(40);
+}
