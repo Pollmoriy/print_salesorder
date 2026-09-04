@@ -9,7 +9,8 @@
   "scripts": {
     "watch": "cds watch",
     "build": "cds build --production",
-    "start": "cds run"
+    "start": "cds run",
+    "watch-orders": "cds watch --open printflow.orders/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.18.0",
@@ -18,7 +19,8 @@
     "@types/node": "^24.0.0",
     "tsx": "^4",
     "typescript": "^7.0.0",
-    "@cap-js/cds-typer": ">=0.1"
+    "@cap-js/cds-typer": ">=0.1",
+    "cds-plugin-ui5": "^0.17.0"
   },
   "imports": {
     "#cds-models/*": "./@cds-models/*/index.js"
@@ -51,12 +53,19 @@
           "users": {
             "alice": {
               "password": "alice",
-              "roles": ["authenticated-user"]
+              "roles": [
+                "authenticated-user"
+              ]
             }
           }
         }
       }
     }
   },
-  "sapux": []
+  "sapux": [
+    "app/orders"
+  ],
+  "workspaces": [
+    "app/*"
+  ]
 }
