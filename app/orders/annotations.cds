@@ -29,10 +29,3 @@ annotate service.SalesOrders with {
         ],
     }
 };
-
-annotate service.SalesOrders with {
-  customer @Common: {
-    Text            : customer.name,
-    TextArrangement : #TextOnly,
-  };
-};
