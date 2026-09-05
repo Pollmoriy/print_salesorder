@@ -614,3 +614,111 @@ annotate service.Materials with {
         ],
     };
 };
+
+annotate service.MaterialStocks with {
+  material @Common: {
+    Text            : material.name,
+    TextArrangement : #TextOnly,
+  };
+};
+
+annotate service.MaterialStocks with @(
+  UI.LineItem#WarehouseInventory: [
+    { Value: material_ID,      Label: 'Material' },
+    { Value: quantityOnHand,   Label: 'On Hand' },
+    { Value: reservedQuantity, Label: 'Reserved' },
+    { Value: available,        Label: 'Available' },
+    { Value: stockStatus,      Label: 'Status', Criticality: stockCriticality },
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// Material
+// ---------------------------------------------------------------------------
+annotate service.Warehouses with {
+  code     @title: 'Code';
+  name     @title: 'Warehouse';
+  location @title: 'Location';
+};
+
+annotate service.Warehouses with {
+  totalMaterials @title: 'Total Materials';
+  lowStockCount  @title: 'Low Stock';
+  criticalCount  @title: 'Critical';
+  stockValue     @title: 'Stock Value';
+};
+
+annotate service.Warehouses with @(
+  UI: {
+    LineItem: [
+      { Value: code,     Label: 'Code' },
+      { Value: name,     Label: 'Warehouse' },
+      { Value: location, Label: 'Location' },
+    ],
+
+    HeaderInfo: {
+      TypeName      : 'Warehouse',
+      TypeNamePlural: 'Warehouses',
+      Title         : { Value: name },
+      Description   : { Value: location },
+    },
+
+    FieldGroup #WarehouseInfo: {
+      Data: [
+        { Value: name },
+        { Value: code },
+        { Value: location },
+      ],
+    },
+
+    FieldGroup #WarehouseKPI: {
+      Data: [
+        { Value: totalMaterials },
+        { Value: lowStockCount, Criticality: lowStockCriticality },
+        { Value: criticalCount, Criticality: criticalCriticality },
+        { Value: stockValue },
+      ],
+    },
+
+    Facets: [
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'WarehouseKPIFacet',
+        Label : 'Overview',
+        Target: '@UI.FieldGroup#WarehouseKPI',
+      },
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'WarehouseInfoFacet',
+        Label : 'Warehouse Information',
+        Target: '@UI.FieldGroup#WarehouseInfo',
+      },
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'InventoryFacet',
+        Label : 'Inventory',
+        Target: 'stocks/@UI.LineItem#WarehouseInventory',
+      },
+    ],
+
+    SelectionFields: [ code, name ],
+  }
+);
+
+annotate service.Warehouses with {
+    code @Common.ValueList : {
+        $Type : 'Common.ValueListType',
+        CollectionPath : 'Warehouses',
+        Parameters : [
+            { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : code, ValueListProperty : 'code' },
+        ],
+    };
+
+    name @Common.ValueList : {
+        $Type : 'Common.ValueListType',
+        CollectionPath : 'Warehouses',
+        Parameters : [
+            { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : name, ValueListProperty : 'name' },
+        ],
+    };
+};

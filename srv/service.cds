@@ -72,7 +72,16 @@ service SalesOrderService @(
 
   @readonly entity MaterialStatusCodes as projection on db.MaterialStatusCodes;
 
-  entity Warehouses        as projection on db.Warehouses;
+  @odata.draft.enabled
+  entity Warehouses as projection on db.Warehouses {
+    *,
+    virtual null as totalMaterials      : Integer,
+    virtual null as lowStockCount       : Integer,
+    virtual null as criticalCount       : Integer,
+    virtual null as stockValue          : Decimal(12, 2),
+    virtual null as lowStockCriticality : Integer,
+    virtual null as criticalCriticality : Integer,
+  };
 
 
   @Capabilities.InsertRestrictions.Insertable: false

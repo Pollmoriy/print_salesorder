@@ -53,5 +53,47 @@ module.exports = cds.service.impl(async function () {
         : 0;
     });
   });
+
+    this.after('READ', 'Warehouses', async (warehouses) => {
+    const rows = Array.isArray(warehouses) ? warehouses : [warehouses];
+    if (!rows.length) return;
+
+    const stocks = await SELECT
+      .from('SalesOrderService.MaterialStocks')
+      .columns('warehouse_ID', 'material_ID', 'quantityOnHand', 'reservedQuantity', 'reorderThreshold', 'criticalThreshold')
+      .where({ warehouse_ID: rows.map(r => r.ID) });
+
+    const materialIds = [...new Set(stocks.map(s => s.material_ID))];
+    const materials = materialIds.length
+      ? await SELECT.from('SalesOrderService.Materials').columns('ID', 'unitCost').where({ ID: materialIds })
+      : [];
+    const unitCostById = Object.fromEntries(materials.map(m => [m.ID, Number(m.unitCost) || 0]));
+
+    const statsByWarehouse = {};
+    for (const s of stocks) {
+      const stats = statsByWarehouse[s.warehouse_ID] ||= { total: 0, low: 0, critical: 0, value: 0 };
+      const available = (Number(s.quantityOnHand) || 0) - (Number(s.reservedQuantity) || 0);
+      const reorderThreshold = Number(s.reorderThreshold) || 0;
+      const criticalThreshold = Number(s.criticalThreshold) || 0;
+
+      stats.total += 1;
+      if (available <= 0 || available <= criticalThreshold) {
+        stats.critical += 1;
+      } else if (available <= reorderThreshold) {
+        stats.low += 1;
+      }
+      stats.value += available * (unitCostById[s.material_ID] || 0);
+    }
+
+    rows.forEach(r => {
+      const stats = statsByWarehouse[r.ID];
+      r.totalMaterials      = stats ? stats.total : 0;
+      r.lowStockCount       = stats ? stats.low : 0;
+      r.criticalCount       = stats ? stats.critical : 0;
+      r.stockValue          = stats ? Number(stats.value.toFixed(2)) : 0;
+      r.lowStockCriticality = stats && stats.low > 0 ? 2 : 3;
+      r.criticalCriticality = stats && stats.critical > 0 ? 1 : 3;
+    });
+  });
 });
 
