@@ -15,7 +15,9 @@
     "watch-products": "cds watch --open printflow.products/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-materials": "cds watch --open printflow.materials/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-warehouses": "cds watch --open printflow.warehouses/index.html?sap-ui-xx-viewCache=false --livereload false",
-    "watch-productionorders": "cds watch --open printflow.productionorders/index.html?sap-ui-xx-viewCache=false --livereload false"
+    "watch-productionorders": "cds watch --open printflow.productionorders/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-payments": "cds watch --open printflow.payments/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-deliveries": "cds watch --open printflow.deliveries/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.18.0",
@@ -74,7 +76,9 @@
     "app/materials",
     "app/warehouses",
     "app/productionorders",
-    "app/productionorders"
+    "app/productionorders",
+    "app/payments",
+    "app/deliveries"
   ],
   "workspaces": [
     "app/*"

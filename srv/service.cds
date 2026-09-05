@@ -129,6 +129,8 @@ service SalesOrderService @(
       end as productionCriticality : Integer
   };
 
+  @Capabilities.InsertRestrictions.Insertable: false
+  @Capabilities.DeleteRestrictions.Deletable: false
   entity Payments as projection on db.Payments {
       *,
       case status
@@ -136,7 +138,9 @@ service SalesOrderService @(
         when 'PENDING'   then 2
         when 'REFUNDED'  then 1
         else 0
-      end as paymentTxCriticality : Integer
+      end as paymentTxCriticality : Integer,
+
+      virtual null as customerName : String(120),
   };
 
   entity Deliveries as projection on db.Deliveries {

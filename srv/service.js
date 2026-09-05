@@ -95,5 +95,28 @@ module.exports = cds.service.impl(async function () {
       r.criticalCriticality = stats && stats.critical > 0 ? 1 : 3;
     });
   });
+
+    this.after('READ', 'Payments', async (payments) => {
+    const rows = Array.isArray(payments) ? payments : [payments];
+    if (!rows.length) return;
+
+    const parentIds = [...new Set(rows.map(r => r.parent_ID).filter(Boolean))];
+    if (!parentIds.length) return;
+
+    const orders = await SELECT.from('SalesOrderService.SalesOrders')
+      .columns('ID', 'customer_ID').where({ ID: parentIds });
+    const customerIdByOrder = Object.fromEntries(orders.map(o => [o.ID, o.customer_ID]));
+
+    const customerIds = [...new Set(Object.values(customerIdByOrder).filter(Boolean))];
+    const customers = customerIds.length
+      ? await SELECT.from('SalesOrderService.Customers').columns('ID', 'name').where({ ID: customerIds })
+      : [];
+    const nameByCustomer = Object.fromEntries(customers.map(c => [c.ID, c.name]));
+
+    rows.forEach(r => {
+      const customerId = customerIdByOrder[r.parent_ID];
+      r.customerName = customerId ? (nameByCustomer[customerId] || null) : null;
+    });
+  });
 });
 

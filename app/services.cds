@@ -9,3 +9,5 @@ using from './materials/annotations';
 
 using from './warehouses/annotations';
 
+using from './payments/annotations';
+

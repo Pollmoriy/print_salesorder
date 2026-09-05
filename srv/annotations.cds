@@ -215,10 +215,12 @@ annotate service.Payments with {
 
 annotate service.Payments with @(
   UI.LineItem: [
-    { Value: amount, Label: 'Amount' },
-    { Value: method, Label: 'Method' },
-    { Value: paidAt, Label: 'Paid At' },
-    { Value: status, Label: 'Status', Criticality: paymentTxCriticality },
+    { Value: parent_ID,    Label: 'Order' },
+    { Value: customerName, Label: 'Customer' },
+    { Value: amount,       Label: 'Amount' },
+    { Value: method,       Label: 'Method' },
+    { Value: paidAt,       Label: 'Paid At' },
+    { Value: status,       Label: 'Status', Criticality: paymentTxCriticality },
   ]
 );
 
