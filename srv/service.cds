@@ -23,6 +23,7 @@ service SalesOrderService @(
   entity MaterialStocks    as projection on db.MaterialStocks;
 
 
+  @Capabilities.InsertRestrictions.Insertable: false
   @odata.draft.enabled
   entity SalesOrders as projection on db.SalesOrders {
       *,
@@ -48,6 +49,8 @@ service SalesOrderService @(
         when 'UNPAID'         then 1
         else 0
       end as paymentCriticality : Integer,
+
+      totalAmount - paidAmount as balanceDue : Decimal(11, 2),
   };
 
   entity OrderItems as projection on db.OrderItems;

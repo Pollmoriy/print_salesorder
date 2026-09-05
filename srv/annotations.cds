@@ -17,6 +17,13 @@ annotate service.SalesOrders with {
   createdAt             @title: 'Order Date';
 };
 
+annotate service.SalesOrders with {
+  balanceDue @title: 'Balance Due';
+  createdBy  @title: 'Created By';
+  modifiedAt @title: 'Last Changed On';
+  modifiedBy @title: 'Last Changed By';
+};
+
 // Show the customer's name instead of the raw foreign-key UUID,
 // everywhere this association is displayed (List Report, Object Page,
 // Value Help result column)
@@ -53,9 +60,34 @@ annotate service.SalesOrders with @(
       ],
     },
 
+    FieldGroup #OrderSummary: {
+      Data: [
+        { Value: totalAmount,     Label: 'Total' },
+        { Value: discountPercent, Label: 'Discount (%)' },
+        { Value: paidAmount,      Label: 'Paid Amount' },
+        { Value: balanceDue,      Label: 'Balance Due',    Criticality: paymentCriticality },
+        { Value: paymentStatus,   Label: 'Payment Status', Criticality: paymentCriticality },
+      ],
+    },
+
+    FieldGroup #History: {
+      Data: [
+        { Value: createdAt,  Label: 'Created On' },
+        { Value: createdBy,  Label: 'Created By' },
+        { Value: modifiedAt, Label: 'Last Changed On' },
+        { Value: modifiedBy, Label: 'Last Changed By' },
+      ],
+    },
+
     // Object Page sections — General Information + embedded tables for
     // the SalesOrders compositions (Items / Production / Payments / Delivery)
     Facets: [
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'SummaryFacet',
+        Label : 'Summary',
+        Target: '@UI.FieldGroup#OrderSummary',
+      },
       {
         $Type : 'UI.ReferenceFacet',
         ID    : 'GeneralInfoFacet',
@@ -85,6 +117,12 @@ annotate service.SalesOrders with @(
         ID    : 'DeliveryFacet',
         Label : 'Delivery',
         Target: 'deliveries/@UI.LineItem',
+      },
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'HistoryFacet',
+        Label : 'History',
+        Target: '@UI.FieldGroup#History',
       },
     ],
 
@@ -242,7 +280,7 @@ annotate service.SalesOrders with @(
   ],
   UI.FieldGroup #HeaderStatus : {
     Data : [
-      { Value: status, Criticality: statusCriticality, Label: ' ' },
+      { Value: status, Criticality: statusCriticality },
     ],
   },
   UI.FieldGroup #HeaderTotal : {

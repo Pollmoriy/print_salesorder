@@ -49,7 +49,8 @@
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
-        "sap.fe.templates": {}
+        "sap.fe.templates": {},
+        "sap.f": {}
       }
     },
     "contentDensities": {
@@ -86,12 +87,22 @@
         {
           "pattern": ":?query:",
           "name": "SalesOrdersList",
-          "target": "SalesOrdersList"
+          "target": [
+            "SalesOrdersList"
+          ]
         },
         {
           "pattern": "SalesOrders({key}):?query:",
           "name": "SalesOrdersObjectPage",
-          "target": "SalesOrdersObjectPage"
+          "target": [
+            "SalesOrdersList",
+            "SalesOrdersObjectPage"
+          ]
+        },
+        {
+          "pattern": "CreateOrderWizard",
+          "name": "CreateOrderWizard",
+          "target": "CreateOrderWizard"
         }
       ],
       "targets": {
@@ -114,6 +125,12 @@
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "tableSettings": {
                     "type": "ResponsiveTable"
+                  },
+                  "actions": {
+                    "CreateOrderWizardAction": {
+                      "press": "printflow.orders.ext.CreateOrderWizard.CreateOrderWizardActions.onCreatePress",
+                      "text": "{i18n>createOrderWizard}"
+                    }
                   }
                 }
               }
@@ -130,6 +147,11 @@
               "contextPath": "/SalesOrders"
             }
           }
+        },
+        "CreateOrderWizard": {
+          "type": "View",
+          "id": "CreateOrderWizard",
+          "name": "printflow.orders.ext.CreateOrderWizard.CreateOrderWizard"
         }
       }
     }
