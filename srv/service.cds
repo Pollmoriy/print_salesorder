@@ -143,8 +143,11 @@ service SalesOrderService @(
       virtual null as customerName : String(120),
   };
 
+  @Capabilities.InsertRestrictions.Insertable: false
+  @Capabilities.DeleteRestrictions.Deletable: false
   entity Deliveries as projection on db.Deliveries {
       *,
+      virtual null as customerName : String(120),
       case status
         when 'DELIVERED'  then 3
         when 'IN_TRANSIT' then 5

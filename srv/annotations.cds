@@ -238,8 +238,9 @@ annotate service.Deliveries with {
 
 annotate service.Deliveries with @(
   UI.LineItem: [
+    { Value: parent_ID,      Label: 'Order' },
+    { Value: customerName,   Label: 'Customer' },
     { Value: status,         Label: 'Status', Criticality: deliveryCriticality },
-    { Value: address,        Label: 'Address' },
     { Value: scheduledDate,  Label: 'Scheduled Date' },
     { Value: trackingNumber, Label: 'Tracking Number' },
   ]
