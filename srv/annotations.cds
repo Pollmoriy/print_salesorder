@@ -289,3 +289,90 @@ annotate service.SalesOrders with @(
     ],
   },
 );
+
+
+
+// ---------------------------------------------------------------------------
+// Customers — List Report + Object Page (Stage 2, Phase 2.3, PAGE 4)
+// ---------------------------------------------------------------------------
+
+annotate service.Customers with {
+  name           @title: 'Name';
+  company        @title: 'Company';
+  email          @title: 'Email';
+  phone          @title: 'Phone';
+  numberOfOrders @title: 'Number of Orders';
+};
+
+annotate service.Customers with @(
+  UI: {
+    LineItem: [
+      { Value: name,           Label: 'Name' },
+      { Value: company,        Label: 'Company' },
+      { Value: email,          Label: 'Email' },
+      { Value: phone,          Label: 'Phone' },
+      { Value: numberOfOrders, Label: 'Number of Orders' },
+    ],
+
+    HeaderInfo: {
+      TypeName      : 'Customer',
+      TypeNamePlural: 'Customers',
+      Title         : { Value: name },
+      Description   : { Value: company },
+    },
+
+    FieldGroup #CustomerInfo: {
+      Data: [
+        { Value: name },
+        { Value: company },
+      ],
+    },
+    FieldGroup #ContactInfo: {
+      Data: [
+        { Value: email },
+        { Value: phone },
+      ],
+    },
+
+    Facets: [
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'CustomerInfoFacet',
+        Label : 'Customer Information',
+        Target: '@UI.FieldGroup#CustomerInfo',
+      },
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'ContactInfoFacet',
+        Label : 'Contact Information',
+        Target: '@UI.FieldGroup#ContactInfo',
+      },
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'OrdersFacet',
+        Label : 'Orders',
+        Target: 'orders/@UI.LineItem',
+      },
+    ],
+
+    SelectionFields: [ name, company ],
+  }
+);
+
+annotate service.Customers with {
+    name @Common.ValueList : {
+        $Type : 'Common.ValueListType',
+        CollectionPath : 'Customers',
+        Parameters : [
+            { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : name, ValueListProperty : 'name' },
+        ],
+    };
+
+    company @Common.ValueList : {
+        $Type : 'Common.ValueListType',
+        CollectionPath : 'CustomerCompanies',
+        Parameters : [
+            { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : company, ValueListProperty : 'company' },
+        ],
+    };
+};

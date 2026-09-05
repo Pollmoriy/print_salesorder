@@ -10,7 +10,8 @@
     "watch": "cds watch",
     "build": "cds build --production",
     "start": "cds run",
-    "watch-orders": "cds watch --open printflow.orders/index.html?sap-ui-xx-viewCache=false --livereload false"
+    "watch-orders": "cds watch --open printflow.orders/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-customers": "cds watch --open printflow.customers/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.18.0",
@@ -63,7 +64,8 @@
     }
   },
   "sapux": [
-    "app/orders"
+    "app/orders",
+    "app/customers"
   ],
   "workspaces": [
     "app/*"

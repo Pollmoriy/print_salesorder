@@ -16,7 +16,19 @@ service SalesOrderService @(
   requires: 'authenticated-user'
 ) {
 
-  entity Customers         as projection on db.Customers;
+  @odata.draft.enabled
+  entity Customers as projection on db.Customers {
+    *,
+    virtual null as numberOfOrders : Integer,
+  };
+
+  @readonly
+  @cds.redirection.target: false
+  entity CustomerCompanies as select from db.Customers {
+    key company
+  } where company is not null
+  group by company;
+
   entity Products          as projection on db.Products;
   entity Materials         as projection on db.Materials;
   entity Warehouses        as projection on db.Warehouses;
