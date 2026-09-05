@@ -3,9 +3,8 @@
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
   displayBlock="true">
-  <Shell>
-    <App>
-      <Page title="{i18n>pageTitle}" showHeader="true" class="sapUiContentPadding">
+  <App>
+    <Page title="{i18n>pageTitle}" showHeader="true" class="sapUiContentPadding">
         <content>
           <VBox>
             <SegmentedButton id="statusFilter" select="onFilterChange" class="sapUiSmallMarginBottom">
@@ -19,7 +18,6 @@
             <VBox id="cardList"/>
           </VBox>
         </content>
-      </Page>
-    </App>
-  </Shell>
+    </Page>
+  </App>
 </mvc:View>

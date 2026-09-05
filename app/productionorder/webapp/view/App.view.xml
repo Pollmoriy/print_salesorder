@@ -1,19 +1,25 @@
 <mvc:View
-  controllerName="printflow.productionorder.controller.App"
-  xmlns="sap.m"
-  xmlns:mvc="sap.ui.core.mvc"
-  displayBlock="true">
-  <Shell>
+    controllerName="printflow.productionorder.controller.App"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true">
     <App>
-      <Page title="{i18n>pageTitle}" showHeader="true">
-        <content>
-          <HBox height="100%" width="100%">
-            <List id="orderList" width="320px" mode="SingleSelectMaster"
-                  selectionChange="onOrderSelect" noDataText="{i18n>noOrders}"/>
-            <VBox id="detailContainer" class="detailContainer sapUiResponsiveMargin" width="100%"/>
-          </HBox>
-        </content>
-      </Page>
+        <Page title="{i18n>pageTitle}" showHeader="true" enableScrolling="false">
+            <content>
+                <HBox height="100%" width="100%" renderType="Bare">
+                    <List 
+                        id="orderList" 
+                        width="320px" 
+                        mode="SingleSelectMaster"
+                        selectionChange="onOrderSelect" 
+                        noDataText="{i18n>noOrders}"
+                        class="orderListContainer"/>
+                    <VBox 
+                        id="detailContainer" 
+                        class="detailContainer" 
+                        width="100%"/>
+                </HBox>
+            </content>
+        </Page>
     </App>
-  </Shell>
 </mvc:View>

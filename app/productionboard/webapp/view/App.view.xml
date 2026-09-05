@@ -1,17 +1,19 @@
 <mvc:View
-  controllerName="printflow.productionboard.controller.App"
-  xmlns="sap.m"
-  xmlns:mvc="sap.ui.core.mvc"
-  displayBlock="true">
-  <Shell>
+    controllerName="printflow.productionboard.controller.App"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true">
     <App>
-      <Page title="{i18n>pageTitle}" showHeader="true" class="sapUiContentPadding">
-        <content>
-          <ScrollContainer horizontal="true" vertical="false" height="100%" width="100%">
-            <HBox id="boardContainer" class="board"/>
-          </ScrollContainer>
-        </content>
-      </Page>
+        <Page title="{i18n>pageTitle}" showHeader="true" class="sapUiContentPadding">
+            <content>
+                <ScrollContainer horizontal="true" vertical="false" height="100%" width="100%">
+                    <HBox 
+                        id="boardContainer" 
+                        class="board"
+                        justifyContent="Center"
+                        alignItems="Center"/>
+                </ScrollContainer>
+            </content>
+        </Page>
     </App>
-  </Shell>
 </mvc:View>
