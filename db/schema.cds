@@ -65,6 +65,9 @@ entity Products : cuid, managed {
   description : String(1000);
   unit        : Unit;
   basePrice   : Decimal(9, 2);
+
+  orderItems  : Association to many OrderItems
+                  on orderItems.product = $self;
 }
 
 entity Materials : cuid, managed {
@@ -206,5 +209,17 @@ entity PaymentTxStatusCodes {
 @readonly
 entity DeliveryStatusCodes {
   key code : DeliveryStatus;
+      name : String(40);
+}
+
+@readonly
+entity UnitCodes {
+  key code : Unit;
+      name : String(40);
+}
+
+@readonly
+entity MaterialStatusCodes {
+  key code : MaterialStatus;
       name : String(40);
 }

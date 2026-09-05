@@ -376,3 +376,241 @@ annotate service.Customers with {
         ],
     };
 };
+
+
+// ---------------------------------------------------------------------------
+// Products — List Report + Object Page (Stage 2, Phase 2.3, PAGE 4)
+// ---------------------------------------------------------------------------
+
+annotate service.Products with {
+  code        @title: 'Code';
+  name        @title: 'Name';
+  description @title: 'Description';
+  unit        @title: 'Unit';
+  basePrice   @title: 'Base Price';
+};
+
+annotate service.Products with {
+  unit @Common : {
+    ValueListWithFixedValues : true,
+    ValueList : {
+      $Type : 'Common.ValueListType',
+      CollectionPath : 'UnitCodes',
+      Parameters : [
+        { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : unit, ValueListProperty : 'code' },
+      ],
+    },
+  };
+};
+
+annotate service.Products with @(
+  UI: {
+    LineItem: [
+      { Value: code,      Label: 'Code' },
+      { Value: name,      Label: 'Name' },
+      { Value: unit,      Label: 'Unit' },
+      { Value: basePrice, Label: 'Base Price' },
+    ],
+
+    HeaderInfo: {
+      TypeName      : 'Product',
+      TypeNamePlural: 'Products',
+      Title         : { Value: name },
+      Description   : { Value: code },
+    },
+
+    FieldGroup #ProductInfo: {
+      Data: [
+        { Value: code },
+        { Value: name },
+        { Value: description },
+        { Value: unit },
+        { Value: basePrice },
+      ],
+    },
+
+    FieldGroup #ProductSummary: {
+      Data: [
+        { Value: ordersThisMonth, Label: 'Orders this Month' },
+        { Value: revenue,         Label: 'Revenue' },
+        { Value: averageQuantity, Label: 'Average Quantity' },
+      ],
+    },
+
+    Facets: [
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'ProductInfoFacet',
+        Label : 'Product',
+        Target: '@UI.FieldGroup#ProductInfo',
+      },
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'ProductSummaryFacet',
+        Label : 'Price / Product Summary',
+        Target: '@UI.FieldGroup#ProductSummary',
+      },
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'OrderHistoryFacet',
+        Label : 'Order History',
+        Target: 'orderItems/@UI.LineItem#ProductHistory',
+      },
+    ],
+
+    SelectionFields: [ code, name, unit ],
+  }
+);
+
+annotate service.OrderItems with @(
+  UI.LineItem #ProductHistory: [
+    { Value: parent.orderNo,   Label: 'Order' },
+    { Value: parent.createdAt, Label: 'Order Date' },
+    { Value: quantity,         Label: 'Quantity' },
+    { Value: unitPrice,        Label: 'Unit Price' },
+    { Value: lineTotal,        Label: 'Line Total' },
+  ]
+);
+
+annotate service.Products with {
+    code @Common.ValueList : {
+        $Type : 'Common.ValueListType',
+        CollectionPath : 'Products',
+        Parameters : [
+            { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : code, ValueListProperty : 'code' },
+        ],
+    };
+
+    name @Common.ValueList : {
+        $Type : 'Common.ValueListType',
+        CollectionPath : 'Products',
+        Parameters : [
+            { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : name, ValueListProperty : 'name' },
+        ],
+    };
+};
+
+// ---------------------------------------------------------------------------
+// Material
+// ---------------------------------------------------------------------------
+annotate service.Materials with {
+  code     @title: 'Code';
+  name     @title: 'Material';
+  unit     @title: 'Unit';
+  unitCost @title: 'Cost';
+  status   @title: 'Status';
+};
+
+annotate service.Materials with {
+  unit @Common : {
+    ValueListWithFixedValues : true,
+    ValueList : {
+      $Type : 'Common.ValueListType',
+      CollectionPath : 'UnitCodes',
+      Parameters : [
+        { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : unit, ValueListProperty : 'code' },
+      ],
+    },
+  };
+
+  status @Common : {
+    ValueListWithFixedValues : true,
+    ValueList : {
+      $Type : 'Common.ValueListType',
+      CollectionPath : 'MaterialStatusCodes',
+      Parameters : [
+        { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : status, ValueListProperty : 'code' },
+      ],
+    },
+  };
+};
+
+annotate service.Materials with @(
+  UI: {
+    LineItem: [
+      { Value: code,     Label: 'Code' },
+      { Value: name,     Label: 'Material' },
+      { Value: unit,     Label: 'Unit' },
+      { Value: unitCost, Label: 'Cost' },
+      { Value: status,   Label: 'Status', Criticality: statusCriticality },
+    ],
+
+    HeaderInfo: {
+      TypeName      : 'Material',
+      TypeNamePlural: 'Materials',
+      Title         : { Value: name },
+      Description   : { Value: code },
+    },
+
+    FieldGroup #MaterialInfo: {
+      Data: [
+        { Value: code },
+        { Value: name },
+        { Value: unit },
+        { Value: unitCost },
+        { Value: status, Criticality: statusCriticality },
+      ],
+    },
+
+    Facets: [
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'MaterialInfoFacet',
+        Label : 'Material Information',
+        Target: '@UI.FieldGroup#MaterialInfo',
+      },
+      {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'StockByWarehouseFacet',
+        Label : 'Stock by Warehouse',
+        Target: 'stocks/@UI.LineItem',
+      },
+    ],
+
+    SelectionFields: [ code, name, unit, status ],
+  }
+);
+
+annotate service.MaterialStocks with {
+  warehouse @Common: {
+    Text            : warehouse.name,
+    TextArrangement : #TextOnly,
+  };
+};
+
+annotate service.MaterialStocks with {
+  quantityOnHand   @title: 'On Hand';
+  reservedQuantity @title: 'Reserved';
+  available        @title: 'Available';
+  reorderThreshold @title: 'Threshold';
+  stockStatus      @title: 'Status';
+};
+
+annotate service.MaterialStocks with @(
+  UI.LineItem: [
+    { Value: warehouse_ID,     Label: 'Warehouse' },
+    { Value: quantityOnHand,   Label: 'On Hand' },
+    { Value: reservedQuantity, Label: 'Reserved' },
+    { Value: available,        Label: 'Available' },
+    { Value: reorderThreshold, Label: 'Threshold' },
+    { Value: stockStatus,      Label: 'Status', Criticality: stockCriticality },
+  ]
+);
+
+annotate service.Materials with {
+    code @Common.ValueList : {
+        $Type : 'Common.ValueListType',
+        CollectionPath : 'Materials',
+        Parameters : [
+            { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : code, ValueListProperty : 'code' },
+        ],
+    };
+
+    name @Common.ValueList : {
+        $Type : 'Common.ValueListType',
+        CollectionPath : 'Materials',
+        Parameters : [
+            { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : name, ValueListProperty : 'name' },
+        ],
+    };
+};

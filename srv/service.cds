@@ -29,10 +29,50 @@ service SalesOrderService @(
   } where company is not null
   group by company;
 
-  entity Products          as projection on db.Products;
-  entity Materials         as projection on db.Materials;
+  @odata.draft.enabled
+  entity Products as projection on db.Products {
+    *,
+    virtual null as ordersThisMonth  : Integer,
+    virtual null as revenue          : Decimal(11, 2),
+    virtual null as averageQuantity  : Decimal(9, 2),
+  };
+
+  @readonly entity UnitCodes as projection on db.UnitCodes;
+  
+  @odata.draft.enabled
+  entity Materials as projection on db.Materials {
+    *,
+    case status
+      when 'AVAILABLE'   then 3
+      when 'LOW_STOCK'   then 5
+      when 'CRITICAL'    then 2
+      when 'OUT_OF_STOCK' then 1
+      else 0
+    end as statusCriticality : Integer,
+  };
+
+  entity MaterialStocks as projection on db.MaterialStocks {
+    *,
+    quantityOnHand - reservedQuantity as available : Decimal(12, 3),
+
+    case
+      when quantityOnHand - reservedQuantity <= 0                 then 'OUT_OF_STOCK'
+      when quantityOnHand - reservedQuantity <= criticalThreshold then 'CRITICAL'
+      when quantityOnHand - reservedQuantity <= reorderThreshold  then 'LOW_STOCK'
+      else 'AVAILABLE'
+    end as stockStatus : db.MaterialStatus,
+
+    case
+      when quantityOnHand - reservedQuantity <= 0                 then 1
+      when quantityOnHand - reservedQuantity <= criticalThreshold then 2
+      when quantityOnHand - reservedQuantity <= reorderThreshold  then 5
+      else 3
+    end as stockCriticality : Integer,
+  };
+
+  @readonly entity MaterialStatusCodes as projection on db.MaterialStatusCodes;
+
   entity Warehouses        as projection on db.Warehouses;
-  entity MaterialStocks    as projection on db.MaterialStocks;
 
 
   @Capabilities.InsertRestrictions.Insertable: false
