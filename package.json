@@ -73,6 +73,7 @@
     "app/products",
     "app/materials",
     "app/warehouses",
+    "app/productionorders",
     "app/productionorders"
   ],
   "workspaces": [

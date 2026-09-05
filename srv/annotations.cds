@@ -194,6 +194,7 @@ annotate service.ProductionOrders with {
 
 annotate service.ProductionOrders with @(
   UI.LineItem: [
+    { Value: parent_ID,           Label: 'Order' },
     { Value: status,              Label: 'Status', Criticality: productionCriticality },
     { Value: plannedStart,        Label: 'Planned Start' },
     { Value: plannedEnd,          Label: 'Planned End' },
@@ -722,3 +723,11 @@ annotate service.Warehouses with {
         ],
     };
 };
+
+annotate service.ProductionOrders with @readonly;
+
+annotate service.ProductionOrders with @(
+  Capabilities.InsertRestrictions.Insertable: false,
+  Capabilities.DeleteRestrictions.Deletable: false,
+  Capabilities.UpdateRestrictions.Updatable: false
+);
