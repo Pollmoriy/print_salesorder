@@ -1,16 +1,5 @@
 using {printflow.db as db} from '../db/schema';
 
-/**
- * SalesOrderService — Stage 1 skeleton.
- * Exposes domain entities as plain OData V4 CRUD projections.
- * No custom handlers, no actions/functions, no business logic yet
- * (that's Stage 2 / feature/business-logic).
- *
- * Security foundation (Stage 1, pt. 17): only the anonymous vs.
- * authenticated distinction is enforced here via XSUAA. Role-based
- * access (Sales Manager / Production Manager / Administrator) is
- * introduced later, once UI and services take shape.
- */
 service SalesOrderService @(
   path    : '/odata/v4/sales-order',
   requires: 'authenticated-user'
@@ -43,9 +32,9 @@ service SalesOrderService @(
   entity Materials as projection on db.Materials {
     *,
     case status
-      when 'AVAILABLE'   then 3
-      when 'LOW_STOCK'   then 5
-      when 'CRITICAL'    then 2
+      when 'AVAILABLE'    then 3
+      when 'LOW_STOCK'    then 5
+      when 'CRITICAL'     then 2
       when 'OUT_OF_STOCK' then 1
       else 0
     end as statusCriticality : Integer,
@@ -83,7 +72,6 @@ service SalesOrderService @(
     virtual null as criticalCriticality : Integer,
   };
 
-
   @Capabilities.InsertRestrictions.Insertable: false
   @odata.draft.enabled
   entity SalesOrders as projection on db.SalesOrders {
@@ -112,6 +100,8 @@ service SalesOrderService @(
       end as paymentCriticality : Integer,
 
       totalAmount - paidAmount as balanceDue : Decimal(11, 2),
+  } actions {
+    function materialsRequired() returns array of db.MaterialRequirement;
   };
 
   entity OrderItems as projection on db.OrderItems;
@@ -157,6 +147,7 @@ service SalesOrderService @(
       end as deliveryCriticality : Integer
   };
 
+  @readonly entity BillOfMaterials       as projection on db.BillOfMaterials;
   @readonly entity OrderStatusCodes      as projection on db.OrderStatusCodes;
   @readonly entity UrgencyCodes          as projection on db.UrgencyCodes;
   @readonly entity PaymentStatusCodes    as projection on db.PaymentStatusCodes;

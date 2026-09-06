@@ -141,5 +141,74 @@ module.exports = cds.service.impl(async function () {
       r.customerName = customerId ? (nameByCustomer[customerId] || null) : null;
     });
   });
+
+    this.on('materialsRequired', 'SalesOrders', async (req) => {
+    const orderId = req.params[0].ID || req.params[0];
+
+    const items = await SELECT
+      .from('SalesOrderService.OrderItems')
+      .columns('product_ID', 'quantity')
+      .where({ parent_ID: orderId });
+
+    if (!items.length) return [];
+
+    const productIds = [...new Set(items.map(i => i.product_ID))];
+    const products = await SELECT
+      .from('SalesOrderService.Products')
+      .columns('ID', 'code')
+      .where({ ID: productIds });
+    const codeByProductId = Object.fromEntries(products.map(p => [p.ID, p.code]));
+
+    const productCodes = [...new Set(products.map(p => p.code))];
+    const bom = productCodes.length
+      ? await SELECT.from('SalesOrderService.BillOfMaterials')
+          .columns('productCode', 'materialCode', 'quantityPerUnit')
+          .where({ productCode: productCodes })
+      : [];
+
+    const requiredByMaterialCode = {};
+    for (const item of items) {
+      const productCode = codeByProductId[item.product_ID];
+      const bomRows = bom.filter(b => b.productCode === productCode);
+      for (const b of bomRows) {
+        const need = Number(item.quantity) * Number(b.quantityPerUnit);
+        requiredByMaterialCode[b.materialCode] = (requiredByMaterialCode[b.materialCode] || 0) + need;
+      }
+    }
+
+    const materialCodes = Object.keys(requiredByMaterialCode);
+    if (!materialCodes.length) return [];
+
+    const materials = await SELECT
+      .from('SalesOrderService.Materials')
+      .columns('ID', 'code', 'name', 'unit')
+      .where({ code: materialCodes });
+
+    const materialIds = materials.map(m => m.ID);
+    const stocks = materialIds.length
+      ? await SELECT.from('SalesOrderService.MaterialStocks')
+          .columns('material_ID', 'quantityOnHand', 'reservedQuantity')
+          .where({ material_ID: materialIds })
+      : [];
+
+    const availableByMaterialId = {};
+    for (const s of stocks) {
+      const avail = (Number(s.quantityOnHand) || 0) - (Number(s.reservedQuantity) || 0);
+      availableByMaterialId[s.material_ID] = (availableByMaterialId[s.material_ID] || 0) + avail;
+    }
+
+    return materials.map(m => {
+      const requiredQty = Number(requiredByMaterialCode[m.code].toFixed(3));
+      const availableQty = Number((availableByMaterialId[m.ID] || 0).toFixed(3));
+      return {
+        materialCode: m.code,
+        materialName: m.name,
+        unit: m.unit,
+        requiredQty,
+        availableQty,
+        sufficient: availableQty >= requiredQty
+      };
+    });
+  });
 });
 

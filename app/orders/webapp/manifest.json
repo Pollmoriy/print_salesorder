@@ -144,7 +144,36 @@
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/SalesOrders"
+              "contextPath": "/SalesOrders",
+              "controlConfiguration": {
+                "items/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "actions": {
+                    "CheckMaterialsAction": {
+                      "press": "printflow.orders.ext.MaterialsRequired.MaterialsRequiredActions.onCheckMaterials",
+                      "text": "{i18n>checkMaterials}",
+                      "requiresSelection": false
+                    }
+                  }
+                },
+                "payments/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "actions": {
+                    "RegisterPaymentAction": {
+                      "press": "printflow.orders.ext.PaymentDialog.PaymentDialogActions.onRegisterPayment",
+                      "text": "{i18n>registerPayment}",
+                      "requiresSelection": false
+                    }
+                  }
+                },
+                "deliveries/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "actions": {
+                    "ScheduleDeliveryAction": {
+                      "press": "printflow.orders.ext.DeliveryDialog.DeliveryDialogActions.onScheduleDelivery",
+                      "text": "{i18n>scheduleDelivery}",
+                      "requiresSelection": false
+                    }
+                  }
+                }
+              }
             }
           }
         },

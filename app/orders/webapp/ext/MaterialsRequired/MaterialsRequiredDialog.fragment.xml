@@ -1,0 +1,31 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+  <Dialog title="Materials Required" contentWidth="36rem">
+    <content>
+      <Table items="{materials>/items}" noDataText="No materials required" class="sapUiSmallMargin">
+        <columns>
+          <Column><Text text="Material"/></Column>
+          <Column hAlign="End"><Text text="Required"/></Column>
+          <Column hAlign="End"><Text text="Available"/></Column>
+          <Column><Text text="Status"/></Column>
+        </columns>
+        <items>
+          <ColumnListItem>
+            <cells>
+              <Text text="{materials>materialName}"/>
+              <Text text="{materials>requiredQty} {materials>unit}"/>
+              <Text text="{materials>availableQty} {materials>unit}"/>
+              <ObjectStatus text="{= ${materials>sufficient} ? 'Sufficient' : 'Insufficient' }"
+                            state="{= ${materials>sufficient} ? 'Success' : 'Error' }"/>
+            </cells>
+          </ColumnListItem>
+        </items>
+      </Table>
+    </content>
+    <beginButton>
+      <Button text="Reserve Materials" type="Emphasized" press=".onReserveMaterials"/>
+    </beginButton>
+    <endButton>
+      <Button text="Close" press=".onCloseMaterialsDialog"/>
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>
