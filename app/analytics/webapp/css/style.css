@@ -146,3 +146,14 @@
 .barFill[class*="product"] {
   background: #8875e0;
 }
+
+.kpiIcon {
+  color: #6a6d70;
+  margin-bottom: 0.25rem;
+}
+.boardCardOrderNoRow {
+  gap: 0.375rem;
+}
+.boardCardOrderIcon {
+  color: #6a6d70;
+}

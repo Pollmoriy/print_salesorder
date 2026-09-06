@@ -22,10 +22,10 @@
       </Table>
     </content>
     <beginButton>
-      <Button text="Reserve Materials" type="Emphasized" press=".onReserveMaterials"/>
+      <Button text="Reserve Materials" icon="sap-icon://locked" tooltip="Reserve the listed materials for this order" type="Emphasized" press=".onReserveMaterials"/>
     </beginButton>
     <endButton>
-      <Button text="Close" press=".onCloseMaterialsDialog"/>
+      <Button text="Close" icon="sap-icon://decline" tooltip="Close this dialog" press=".onCloseMaterialsDialog"/>
     </endButton>
   </Dialog>
 </core:FragmentDefinition>

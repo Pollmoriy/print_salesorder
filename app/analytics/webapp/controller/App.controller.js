@@ -4,8 +4,9 @@ sap.ui.define([
   "sap/m/HBox",
   "sap/m/Panel",
   "sap/m/Title",
-  "sap/m/Text"
-], function (Controller, VBox, HBox, Panel, Title, Text) {
+  "sap/m/Text",
+  "sap/ui/core/Icon"
+], function (Controller, VBox, HBox, Panel, Title, Text, Icon) {
   "use strict";
 
   const MATERIAL_STATUSES = ["AVAILABLE", "LOW_STOCK", "CRITICAL", "OUT_OF_STOCK"];
@@ -65,9 +66,12 @@ sap.ui.define([
         .replace(/[^A-Za-z0-9]/g, "");
     },
 
-    _buildKpiCard: function (sLabel, sValue, sColorClass) {
+    _buildKpiCard: function (sLabel, sValue, sColorClass, sIcon) {
       const oCard = new Panel().addStyleClass("kpiCard");
       if (sColorClass) oCard.addStyleClass(sColorClass);
+      if (sIcon) {
+        oCard.addContent(new Icon({ src: sIcon, size: "1.5rem" }).addStyleClass("kpiIcon"));
+      }
       oCard.addContent(new Text({ text: sLabel }).addStyleClass("kpiLabel"));
       oCard.addContent(new Text({ text: sValue }).addStyleClass("kpiValue"));
       return oCard;
@@ -106,9 +110,9 @@ sap.ui.define([
 
       const oContainer = this.byId("salesKpiContainer");
       oContainer.destroyItems();
-      oContainer.addItem(this._buildKpiCard("Revenue", `€${fRevenue.toFixed(2)}`, "kpiRevenue"));
-      oContainer.addItem(this._buildKpiCard("Orders", String(iOrderCount), "kpiOrders"));
-      oContainer.addItem(this._buildKpiCard("Average Order Value", `€${fAvgOrderValue.toFixed(2)}`, "kpiProduction"));
+      oContainer.addItem(this._buildKpiCard("Revenue", `€${fRevenue.toFixed(2)}`, "kpiRevenue", "sap-icon://money-bills"));
+      oContainer.addItem(this._buildKpiCard("Orders", String(iOrderCount), "kpiOrders", "sap-icon://sales-order"));
+      oContainer.addItem(this._buildKpiCard("Average Order Value", `€${fAvgOrderValue.toFixed(2)}`, "kpiProduction", "sap-icon://kpi-managing-my-area"));
     },
 
     _renderRevenueChart: function (aOrders) {
@@ -193,10 +197,10 @@ sap.ui.define([
 
       const oContainer = this.byId("productionKpiContainer");
       oContainer.destroyItems();
-      oContainer.addItem(this._buildKpiCard("Completed", String(iCompleted), "kpiReady"));
-      oContainer.addItem(this._buildKpiCard("In Production", String(iInProduction), "kpiProduction"));
-      oContainer.addItem(this._buildKpiCard("Delayed", String(iDelayed), "kpiDelayed"));
-      oContainer.addItem(this._buildKpiCard("Avg. Production Time", sAvgTime, "kpiOrders"));
+     oContainer.addItem(this._buildKpiCard("Completed", String(iCompleted), "kpiReady", "sap-icon://complete"));
+      oContainer.addItem(this._buildKpiCard("In Production", String(iInProduction), "kpiProduction", "sap-icon://factory"));
+      oContainer.addItem(this._buildKpiCard("Delayed", String(iDelayed), "kpiDelayed", "sap-icon://alert"));
+      oContainer.addItem(this._buildKpiCard("Avg. Production Time", sAvgTime, "kpiOrders", "sap-icon://time-entry-request"));
     },
 
     // ---------------- Inventory Analytics ----------------
@@ -207,10 +211,10 @@ sap.ui.define([
 
       const oContainer = this.byId("inventoryKpiContainer");
       oContainer.destroyItems();
-      oContainer.addItem(this._buildKpiCard("Available", String(oCounts.AVAILABLE), "kpiReady"));
-      oContainer.addItem(this._buildKpiCard("Low Stock", String(oCounts.LOW_STOCK), "kpiSubmitted"));
-      oContainer.addItem(this._buildKpiCard("Critical", String(oCounts.CRITICAL), "kpiProduction"));
-      oContainer.addItem(this._buildKpiCard("Out of Stock", String(oCounts.OUT_OF_STOCK), "kpiDelayed"));
+      oContainer.addItem(this._buildKpiCard("Available", String(oCounts.AVAILABLE), "kpiReady", "sap-icon://accept"));
+      oContainer.addItem(this._buildKpiCard("Low Stock", String(oCounts.LOW_STOCK), "kpiSubmitted", "sap-icon://warning"));
+      oContainer.addItem(this._buildKpiCard("Critical", String(oCounts.CRITICAL), "kpiProduction", "sap-icon://alert"));
+      oContainer.addItem(this._buildKpiCard("Out of Stock", String(oCounts.OUT_OF_STOCK), "kpiDelayed", "sap-icon://cancel"));
     }
   });
 });

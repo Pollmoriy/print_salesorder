@@ -188,3 +188,14 @@ Output
 .barFill.prodRework       { background: #e9435d; }
 .barFill.prodCompleted    { background: #1e8e3e; }
 .barFill.prodCancelled    { background: #8d97a6; }
+
+.kpiIcon {
+  color: #6a6d70;
+  margin-bottom: 0.25rem;
+}
+.boardCardOrderNoRow {
+  gap: 0.375rem;
+}
+.boardCardOrderIcon {
+  color: #6a6d70;
+}

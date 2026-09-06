@@ -1,6 +1,8 @@
 sap.ui.define([
   "sap/ui/core/mvc/Controller",
   "sap/m/VBox",
+  "sap/m/HBox",
+  "sap/ui/core/Icon",
   "sap/m/Panel",
   "sap/m/Title",
   "sap/m/Text",
@@ -9,7 +11,7 @@ sap.ui.define([
   "sap/m/Button",
   "sap/m/MessageToast",
   "sap/ui/core/library"
-], function (Controller, VBox, Panel, Title, Text, ObjectStatus, Toolbar, Button, MessageToast, coreLibrary) {
+], function (Controller, VBox, HBox, Icon, Panel, Title, Text, ObjectStatus, Toolbar, Button, MessageToast, coreLibrary) {
   "use strict";
 
   const ValueState = coreLibrary.ValueState;
@@ -108,7 +110,10 @@ sap.ui.define([
 
       const oCard = new Panel({ class: "boardCard" }).addStyleClass("boardCard");
 
-      oCard.addContent(new Text({ text: oParent.orderNo || "—" }).addStyleClass("boardCardOrderNo"));
+      const oOrderNoRow = new HBox({ alignItems: "Center" }).addStyleClass("boardCardOrderNoRow");
+      oOrderNoRow.addItem(new Icon({ src: "sap-icon://sales-order", size: "0.9rem" }).addStyleClass("boardCardOrderIcon"));
+      oOrderNoRow.addItem(new Text({ text: oParent.orderNo || "—" }).addStyleClass("boardCardOrderNo"));
+      oCard.addContent(oOrderNoRow);
       oCard.addContent(new Text({ text: sProductLine }));
       oCard.addContent(new ObjectStatus({
         text: oParent.urgencyLevel || "STANDARD",
@@ -135,6 +140,7 @@ sap.ui.define([
           oToolbar.addContent(new Button({
             text: oAction.text,
             icon: oAction.icon,
+            tooltip: oAction.text,
             type: "Transparent",
             press: () => this._onActionPress(oAction, oOrder, oParent)
           }));

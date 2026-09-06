@@ -13,10 +13,10 @@
       </VBox>
     </content>
     <beginButton>
-      <Button text="Schedule" type="Emphasized" press=".onConfirmScheduleDelivery"/>
+      <Button text="Schedule" icon="sap-icon://accept" tooltip="Save delivery schedule" type="Emphasized" press=".onConfirmScheduleDelivery"/>
     </beginButton>
     <endButton>
-      <Button text="Cancel" press=".onCancelScheduleDelivery"/>
+      <Button text="Cancel" icon="sap-icon://decline" tooltip="Discard and close" press=".onCancelScheduleDelivery"/>
     </endButton>
   </Dialog>
 </core:FragmentDefinition>

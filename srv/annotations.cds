@@ -267,6 +267,7 @@ annotate service.SalesOrders with @(
   UI.HeaderInfo : {
     TypeName       : 'Order',
     TypeNamePlural : 'Orders',
+    TypeImageUrl   : 'sap-icon://sales-order',
     Title          : { Value: orderNo },
     Description    : { Value: customer_ID },
   },
@@ -321,6 +322,7 @@ annotate service.Customers with @(
     HeaderInfo: {
       TypeName      : 'Customer',
       TypeNamePlural: 'Customers',
+      TypeImageUrl  : 'sap-icon://customer',
       Title         : { Value: name },
       Description   : { Value: company },
     },
@@ -419,6 +421,7 @@ annotate service.Products with @(
     HeaderInfo: {
       TypeName      : 'Product',
       TypeNamePlural: 'Products',
+      TypeImageUrl  : 'sap-icon://product',
       Title         : { Value: name },
       Description   : { Value: code },
     },
@@ -542,6 +545,7 @@ annotate service.Materials with @(
     HeaderInfo: {
       TypeName      : 'Material',
       TypeNamePlural: 'Materials',
+      TypeImageUrl  : 'sap-icon://laptop',
       Title         : { Value: name },
       Description   : { Value: code },
     },
@@ -663,6 +667,7 @@ annotate service.Warehouses with @(
     HeaderInfo: {
       TypeName      : 'Warehouse',
       TypeNamePlural: 'Warehouses',
+      TypeImageUrl  : 'sap-icon://factory',
       Title         : { Value: name },
       Description   : { Value: location },
     },

@@ -17,10 +17,10 @@
       </VBox>
     </content>
     <beginButton>
-      <Button text="Register" type="Emphasized" press=".onConfirmRegisterPayment"/>
+      <Button text="Register" icon="sap-icon://accept" tooltip="Save this payment" type="Emphasized" press=".onConfirmRegisterPayment"/>
     </beginButton>
     <endButton>
-      <Button text="Cancel" press=".onCancelRegisterPayment"/>
+      <Button text="Cancel" icon="sap-icon://decline" tooltip="Discard and close" press=".onCancelRegisterPayment"/>
     </endButton>
   </Dialog>
 </core:FragmentDefinition>

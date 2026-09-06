@@ -81,15 +81,18 @@ sap.ui.define([
 
       const oContainer = this.byId("kpiContainer");
       oContainer.destroyItems();
-      oContainer.addItem(this._buildKpiCard("Orders Today", String(aTodayOrders.length), "kpiOrders"));
-      oContainer.addItem(this._buildKpiCard("Revenue", `€${fRevenueToday.toFixed(2)}`, "kpiRevenue"));
-      oContainer.addItem(this._buildKpiCard("In Production", String(iInProduction), "kpiProduction"));
-      oContainer.addItem(this._buildKpiCard("Ready for Pickup", String(iReadyForPickup), "kpiReady"));
+      oContainer.addItem(this._buildKpiCard("Orders Today", String(aTodayOrders.length), "kpiOrders", "sap-icon://sales-order"));
+      oContainer.addItem(this._buildKpiCard("Revenue", `€${fRevenueToday.toFixed(2)}`, "kpiRevenue", "sap-icon://money-bills"));
+      oContainer.addItem(this._buildKpiCard("In Production", String(iInProduction), "kpiProduction", "sap-icon://factory"));
+      oContainer.addItem(this._buildKpiCard("Ready for Pickup", String(iReadyForPickup), "kpiReady", "sap-icon://shipping-status"));
     },
 
-    _buildKpiCard: function (sLabel, sValue, sColorClass) {
+    _buildKpiCard: function (sLabel, sValue, sColorClass, sIcon) {
       const oCard = new Panel().addStyleClass("kpiCard");
       if (sColorClass) oCard.addStyleClass(sColorClass);
+      if (sIcon) {
+        oCard.addContent(new Icon({ src: sIcon, size: "1.5rem" }).addStyleClass("kpiIcon"));
+      }
       oCard.addContent(new Text({ text: sLabel }).addStyleClass("kpiLabel"));
       oCard.addContent(new Text({ text: sValue }).addStyleClass("kpiValue"));
       return oCard;
@@ -198,7 +201,7 @@ sap.ui.define([
 
     _buildAttentionRow: function (sIcon, sColor, sText) {
       const oRow = new HBox({ alignItems: "Center" }).addStyleClass("attentionRow");
-      oRow.addItem(new Icon({ src: sIcon, color: sColor, size: "1.1rem" }).addStyleClass("attentionIcon"));
+      oRow.addItem(new Icon({ src: sIcon, color: sColor, size: "1.1rem", tooltip: sText }).addStyleClass("attentionIcon"));
       oRow.addItem(new Text({ text: sText }));
       return oRow;
     },

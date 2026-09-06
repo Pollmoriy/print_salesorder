@@ -151,6 +151,7 @@
                     "CheckMaterialsAction": {
                       "press": "printflow.orders.ext.MaterialsRequired.MaterialsRequiredActions.onCheckMaterials",
                       "text": "{i18n>checkMaterials}",
+                      "icon": "sap-icon://factory",
                       "requiresSelection": false
                     }
                   }
@@ -160,6 +161,7 @@
                     "RegisterPaymentAction": {
                       "press": "printflow.orders.ext.PaymentDialog.PaymentDialogActions.onRegisterPayment",
                       "text": "{i18n>registerPayment}",
+                      "icon": "sap-icon://money-bills",
                       "requiresSelection": false
                     }
                   }
@@ -169,6 +171,7 @@
                     "ScheduleDeliveryAction": {
                       "press": "printflow.orders.ext.DeliveryDialog.DeliveryDialogActions.onScheduleDelivery",
                       "text": "{i18n>scheduleDelivery}",
+                      "icon": "sap-icon://shipping-status",
                       "requiresSelection": false
                     }
                   }
