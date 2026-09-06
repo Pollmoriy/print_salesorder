@@ -1,0 +1,8 @@
+code,name
+PLANNED,Planned
+IN_PROGRESS,In Progress
+PAUSED,Paused
+QUALITY_CHECK,Quality Check
+REWORK,Rework
+COMPLETED,Completed
+CANCELLED,Cancelled

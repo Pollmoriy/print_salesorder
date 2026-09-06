@@ -1,0 +1,8 @@
+code,name
+DRAFT,Draft
+SUBMITTED,Submitted
+CONFIRMED,Confirmed
+IN_PRODUCTION,In Production
+READY,Ready
+DELIVERED,Delivered
+CANCELLED,Cancelled

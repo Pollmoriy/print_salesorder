@@ -1,0 +1,23 @@
+<mvc:View
+  controllerName="printflow.delivery.controller.App"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc"
+  displayBlock="true">
+  <App>
+    <Page title="{i18n>pageTitle}" showHeader="true" class="sapUiContentPadding">
+        <content>
+          <VBox>
+            <SegmentedButton id="statusFilter" select="onFilterChange" class="sapUiSmallMarginBottom">
+              <items>
+                <SegmentedButtonItem key="ALL" text="All"/>
+                <SegmentedButtonItem key="SCHEDULED" text="Scheduled"/>
+                <SegmentedButtonItem key="IN_TRANSIT" text="In Transit"/>
+                <SegmentedButtonItem key="DELIVERED" text="Delivered"/>
+              </items>
+            </SegmentedButton>
+            <VBox id="cardList"/>
+          </VBox>
+        </content>
+    </Page>
+  </App>
+</mvc:View>

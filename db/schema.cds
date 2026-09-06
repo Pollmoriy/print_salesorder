@@ -6,7 +6,7 @@ using {
 } from '@sap/cds/common';
 
 // ---------------------------------------------------------------------------
-// Enums / Types (Stage 1, pt. 8 / 0.34)
+// Enums / Types
 // ---------------------------------------------------------------------------
 
 type Unit             : String enum {
@@ -45,10 +45,21 @@ type MaterialStatus   : String enum {
   AVAILABLE; LOW_STOCK; CRITICAL; OUT_OF_STOCK;
 }
 
+// Структура для функции materialsRequired()
+type MaterialRequirement {
+  materialCode     : String(20);
+  materialName     : String(120);
+  requiredQuantity : Decimal(12, 3);
+  availableQuantity: Decimal(12, 3);
+  unit             : Unit;
+  isSufficient     : Boolean;
+}
+
 // ---------------------------------------------------------------------------
-// Master data (Stage 1, pt. 3–7)
+// Master data
 // ---------------------------------------------------------------------------
 
+@odata.draft.enabled
 entity Customers : cuid, managed {
   name    : String(120) not null;
   email   : String(120);
@@ -65,6 +76,9 @@ entity Products : cuid, managed {
   description : String(1000);
   unit        : Unit;
   basePrice   : Decimal(9, 2);
+
+  orderItems  : Association to many OrderItems
+                  on orderItems.product = $self;
 }
 
 entity Materials : cuid, managed {
@@ -73,7 +87,6 @@ entity Materials : cuid, managed {
   unit       : Unit;
   unitCost   : Decimal(9, 2);
 
-  // calculated / aggregate field — persisted, recomputed by business logic (Stage 2)
   status     : MaterialStatus default 'AVAILABLE';
 
   stocks     : Association to many MaterialStocks
@@ -99,8 +112,7 @@ entity MaterialStocks : cuid, managed {
 }
 
 // ---------------------------------------------------------------------------
-// Sales order aggregate (Stage 1, pt. 3–7)
-// root: SalesOrders, compositions: items / productionOrders / payments / deliveries
+// Sales order aggregate
 // ---------------------------------------------------------------------------
 
 entity SalesOrders : cuid, managed {
@@ -112,7 +124,6 @@ entity SalesOrders : cuid, managed {
   discountPercent        : Decimal(5, 2) default 0;
   requestedDeliveryDate  : Date;
 
-  // calculated fields (Stage 2 business logic fills these in)
   totalAmount            : Decimal(11, 2) default 0;
   paidAmount             : Decimal(11, 2) default 0;
   paymentStatus          : PaymentStatus  default 'UNPAID';
@@ -134,20 +145,18 @@ entity OrderItems : cuid, managed {
   unitPrice        : Decimal(9, 2);
   finishingOptions : String(500);
 
-  // calculated field: quantity * unitPrice (Stage 2)
   lineTotal        : Decimal(11, 2) default 0;
 }
 
 entity ProductionOrders : cuid, managed {
-  parent               : Association to SalesOrders not null;
-  status               : ProductionStatus default 'PLANNED';
-  plannedStart         : DateTime;
-  plannedEnd           : DateTime;
-  actualStart          : DateTime;
-  actualEnd            : DateTime;
+  parent              : Association to SalesOrders not null;
+  status              : ProductionStatus default 'PLANNED';
+  plannedStart        : DateTime;
+  plannedEnd          : DateTime;
+  actualStart         : DateTime;
+  actualEnd           : DateTime;
 
-  // calculated field via calculateEstimatedCompletion() (Stage 2)
-  estimatedCompletion  : DateTime;
+  estimatedCompletion : DateTime;
 }
 
 entity Payments : cuid, managed {
@@ -165,4 +174,67 @@ entity Deliveries : cuid, managed {
   scheduledDate   : Date;
   deliveredAt     : DateTime;
   trackingNumber  : String(50);
+}
+
+@readonly
+entity OrderStatusCodes {
+  key code : OrderStatus;
+      name : String(40);
+}
+
+@readonly
+entity UrgencyCodes {
+  key code : Urgency;
+      name : String(40);
+}
+
+@readonly
+entity PaymentStatusCodes {
+  key code : PaymentStatus;
+      name : String(40);
+}
+
+@readonly
+entity ProductionStatusCodes {
+  key code : ProductionStatus;
+      name : String(40);
+}
+
+@readonly
+entity PaymentMethodCodes {
+  key code : PaymentMethod;
+      name : String(40);
+}
+
+@readonly
+entity PaymentTxStatusCodes {
+  key code : PaymentTxStatus;
+      name : String(40);
+}
+
+@readonly
+entity DeliveryStatusCodes {
+  key code : DeliveryStatus;
+      name : String(40);
+}
+
+@readonly
+entity UnitCodes {
+  key code : Unit;
+      name : String(40);
+}
+
+@readonly
+entity MaterialStatusCodes {
+  key code : MaterialStatus;
+      name : String(40);
+}
+
+entity BillOfMaterials : cuid, managed {
+  productCode     : String(20)   not null;
+  materialCode    : String(20)   not null;
+  quantityPerUnit : Decimal(9,4) not null;
+
+  product  : Association to Products  on product.code  = productCode;
+  material : Association to Materials on material.code = materialCode;
 }

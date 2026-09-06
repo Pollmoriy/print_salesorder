@@ -1,0 +1,37 @@
+<mvc:View
+  controllerName="printflow.analytics.controller.App"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc"
+  displayBlock="true">
+  <App>
+    <Page title="{i18n>pageTitle}" showHeader="true" class="sapUiContentPadding">
+      <content>
+        <VBox>
+          <Title text="Analytics" level="H2" class="dashGreetingTitle"/>
+          <Text text="Sales, production and inventory insights for PrintFlow." class="dashGreetingSubtitle"/>
+
+          <!-- Sales Analytics -->
+          <Title text="Sales Analytics" level="H3" class="sapUiSmallMarginTop analyticsSectionTitle"/>
+          <HBox id="salesKpiContainer" class="dashKpiRow sapUiSmallMarginTop" wrap="Wrap"/>
+          <HBox class="dashColumns sapUiSmallMarginTop" wrap="Wrap">
+            <VBox id="revenueChartContainer" class="dashPanel analyticsWidePanel"/>
+          </HBox>
+
+          <!-- Product Analytics -->
+          <Title text="Product Analytics" level="H3" class="sapUiMediumMarginTop analyticsSectionTitle"/>
+          <HBox class="dashColumns sapUiSmallMarginTop" wrap="Wrap">
+            <VBox id="topProductsContainer" class="dashPanel analyticsWidePanel"/>
+          </HBox>
+
+          <!-- Production Analytics -->
+          <Title text="Production Analytics" level="H3" class="sapUiMediumMarginTop analyticsSectionTitle"/>
+          <HBox id="productionKpiContainer" class="dashKpiRow sapUiSmallMarginTop" wrap="Wrap"/>
+
+          <!-- Inventory Analytics -->
+          <Title text="Inventory Analytics" level="H3" class="sapUiMediumMarginTop analyticsSectionTitle"/>
+          <HBox id="inventoryKpiContainer" class="dashKpiRow sapUiSmallMarginTop" wrap="Wrap"/>
+        </VBox>
+      </content>
+    </Page>
+  </App>
+</mvc:View>

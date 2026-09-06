@@ -7,7 +7,5 @@ db/*.db
 .env
 .DS_Store
 default-env.json
-mta_archives/
-.*_mta_build_tmp/
-Makefile_*.mta
-app/orders/dist/
+db/*.sqlite-shm
+db/*.sqlite-wal

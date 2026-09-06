@@ -1,0 +1,153 @@
+<mvc:View
+  controllerName="printflow.orders.ext.CreateOrderWizard.CreateOrderWizard"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form"
+  displayBlock="true">
+  <Page title="{i18n>createOrderTitle}" showNavButton="true" navButtonPress="onNavBack">
+    <content>
+      <Wizard id="orderWizard" complete="onWizardComplete">
+
+        <!-- STEP 1: Customer -->
+        <WizardStep id="stepCustomer" title="{i18n>stepCustomer}"
+                    validated="{draft>/steps/customer/valid}">
+          <f:SimpleForm editable="true" layout="ResponsiveGridLayout">
+            <Label text="{i18n>customer}" required="true"/>
+            <Input id="customerInput"
+              value="{draft>/customer/name}"
+              showValueHelp="true"
+              valueHelpRequest="onCustomerValueHelp"
+              valueHelpOnly="true"
+              placeholder="{i18n>selectCustomer}"/>
+            <Label text="{i18n>urgency}"/>
+            <Select selectedKey="{draft>/urgencyLevel}">
+              <core:Item key="STANDARD" text="Standard"/>
+              <core:Item key="EXPRESS" text="Express"/>
+              <core:Item key="URGENT" text="Urgent"/>
+            </Select>
+            <Label text="{i18n>requestedDeliveryDate}"/>
+            <DatePicker value="{draft>/requestedDeliveryDate}" valueFormat="yyyy-MM-dd" displayFormat="medium"/>
+          </f:SimpleForm>
+        </WizardStep>
+
+        <!-- STEP 2: Products -->
+        <WizardStep id="stepProducts" title="{i18n>stepProducts}"
+                    validated="{draft>/steps/products/valid}">
+          <VBox>
+            <Toolbar>
+              <Title text="{i18n>orderItems}" level="H4"/>
+              <ToolbarSpacer/>
+              <Button text="{i18n>addItem}" icon="sap-icon://add" press="onAddItem"/>
+            </Toolbar>
+
+            <Table id="itemsTable" items="{draft>/items}" noDataText="{i18n>noItemsYet}">
+              <columns>
+                <Column><Text text="{i18n>product}"/></Column>
+                <Column hAlign="End"><Text text="{i18n>quantity}"/></Column>
+                <Column hAlign="End"><Text text="{i18n>unitPrice}"/></Column>
+                <Column><Text text="{i18n>finishing}"/></Column>
+                <Column hAlign="End"><Text text="{i18n>lineTotal}"/></Column>
+                <Column width="3rem"/>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <Input value="{draft>productName}"
+                            showValueHelp="true"
+                            valueHelpRequest="onProductValueHelp"
+                            valueHelpOnly="true"
+                            placeholder="{i18n>selectProduct}"/>
+                    <StepInput min="1" value="{draft>quantity}" change="onQuantityChange"/>
+                    <Input type="Number" value="{draft>unitPrice}" change="onQuantityChange"/>
+                    <Input value="{draft>finishingOptions}"/>
+                    <Text text="{
+                      path: 'draft>lineTotal',
+                      type: 'sap.ui.model.type.Float',
+                      formatOptions: { decimals: 2 }
+                    }"/>
+                    <Button icon="sap-icon://delete" type="Transparent" press="onDeleteItem"/>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+
+            <f:SimpleForm layout="ResponsiveGridLayout" class="sapUiSmallMarginTop">
+              <Label text="{i18n>discountPercent}"/>
+              <Input type="Number" value="{draft>/discountPercent}" change="onQuantityChange"/>
+              <Label text="{i18n>orderTotal}"/>
+              <Text text="{
+                path: 'draft>/orderTotal',
+                type: 'sap.ui.model.type.Float',
+                formatOptions: { decimals: 2 }
+              }" class="sapMTextBold"/>
+            </f:SimpleForm>
+          </VBox>
+        </WizardStep>
+
+        <!-- STEP 3: Summary (review only, no actions) -->
+        <WizardStep id="stepSummary" title="{i18n>stepSummary}">
+          <f:SimpleForm layout="ResponsiveGridLayout">
+            <Label text="{i18n>customer}"/>
+            <Text text="{draft>/customer/name}"/>
+            <Label text="{i18n>urgency}"/>
+            <Text text="{draft>/urgencyLevel}"/>
+            <Label text="{i18n>requestedDeliveryDate}"/>
+            <Text text="{draft>/requestedDeliveryDate}"/>
+          </f:SimpleForm>
+
+          <Table items="{draft>/items}">
+            <columns>
+              <Column><Text text="{i18n>product}"/></Column>
+              <Column hAlign="End"><Text text="{i18n>quantity}"/></Column>
+              <Column hAlign="End"><Text text="{i18n>lineTotal}"/></Column>
+            </columns>
+            <items>
+              <ColumnListItem>
+                <cells>
+                  <Text text="{draft>productName}"/>
+                  <Text text="{draft>quantity}"/>
+                  <Text text="{
+                    path: 'draft>lineTotal',
+                    type: 'sap.ui.model.type.Float',
+                    formatOptions: { decimals: 2 }
+                  }"/>
+                </cells>
+              </ColumnListItem>
+            </items>
+          </Table>
+
+          <Text text="{i18n>orderTotal}: {
+            path: 'draft>/orderTotal',
+            type: 'sap.ui.model.type.Float',
+            formatOptions: { decimals: 2 }
+          }" class="sapMTextBold sapUiSmallMarginTop"/>
+        </WizardStep>
+
+        <!-- STEP 4: Confirmation — final recap + real deep insert -->
+        <WizardStep id="stepConfirmation" title="{i18n>stepConfirmation}" showNextButton="false">
+          <f:SimpleForm layout="ResponsiveGridLayout">
+            <Label text="{i18n>customer}"/>
+            <Text text="{draft>/customer/name}"/>
+            <Label text="{i18n>itemsCount}"/>
+            <Text text="{draft>/items/length}"/>
+            <Label text="{i18n>requestedDeliveryDate}"/>
+            <Text text="{draft>/requestedDeliveryDate}"/>
+            <Label text="{i18n>orderTotal}"/>
+            <Text text="{
+              path: 'draft>/orderTotal',
+              type: 'sap.ui.model.type.Float',
+              formatOptions: { decimals: 2 }
+            }" class="sapMTextBold"/>
+          </f:SimpleForm>
+
+          <HBox class="sapUiMediumMarginTop">
+            <Button text="{i18n>saveDraft}" press="onSaveDraft" class="sapUiTinyMarginEnd"/>
+            <Button text="{i18n>submitOrder}" type="Emphasized" press="onSubmitOrder" busy="{draft>/busy}"/>
+          </HBox>
+        </WizardStep>
+
+      </Wizard>
+    </content>
+  </Page>
+</mvc:View>

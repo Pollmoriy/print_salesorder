@@ -1,18 +1,26 @@
 {
-  "_version": "1.59.0",
+  "_version": "1.86.0",
   "sap.app": {
     "id": "printflow.orders",
     "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
     "title": "{{appTitle}}",
     "description": "{{appDescription}}",
-    "applicationVersion": {
-      "version": "0.1.0"
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:lrop",
+      "version": "1.31.1",
+      "toolsId": "15c95739-2934-4238-b4d2-f80c715ddf2b"
     },
     "dataSources": {
       "mainService": {
         "uri": "/odata/v4/sales-order/",
         "type": "OData",
         "settings": {
+          "annotations": [],
           "odataVersion": "4.0"
         }
       }
@@ -21,6 +29,14 @@
   },
   "sap.ui": {
     "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
     "deviceTypes": {
       "desktop": true,
       "tablet": true,
@@ -28,11 +44,19 @@
     }
   },
   "sap.ui5": {
+    "flexEnabled": true,
     "dependencies": {
-      "minUI5Version": "1.120.0",
+      "minUI5Version": "1.152.0",
       "libs": {
-        "sap.fe.templates": {}
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.fe.templates": {},
+        "sap.f": {}
       }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
     },
     "models": {
       "i18n": {
@@ -45,25 +69,43 @@
       },
       "": {
         "dataSource": "mainService",
+        "preload": true,
         "settings": {
-          "synchronizationMode": "None",
           "operationMode": "Server",
           "autoExpandSelect": true,
           "earlyRequests": true
         }
+      },
+      "@i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties"
       }
     },
+    "resources": {
+      "css": []
+    },
     "routing": {
+      "config": {},
       "routes": [
         {
           "pattern": ":?query:",
           "name": "SalesOrdersList",
-          "target": "SalesOrdersList"
+          "target": [
+            "SalesOrdersList"
+          ]
         },
         {
           "pattern": "SalesOrders({key}):?query:",
           "name": "SalesOrdersObjectPage",
-          "target": "SalesOrdersObjectPage"
+          "target": [
+            "SalesOrdersList",
+            "SalesOrdersObjectPage"
+          ]
+        },
+        {
+          "pattern": "CreateOrderWizard",
+          "name": "CreateOrderWizard",
+          "target": "CreateOrderWizard"
         }
       ],
       "targets": {
@@ -73,12 +115,25 @@
           "name": "sap.fe.templates.ListReport",
           "options": {
             "settings": {
-              "entitySet": "SalesOrders",
+              "contextPath": "/SalesOrders",
               "variantManagement": "Page",
               "navigation": {
                 "SalesOrders": {
                   "detail": {
                     "route": "SalesOrdersObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable"
+                  },
+                  "actions": {
+                    "CreateOrderWizardAction": {
+                      "press": "printflow.orders.ext.CreateOrderWizard.CreateOrderWizardActions.onCreatePress",
+                      "text": "{i18n>createOrderWizard}"
+                    }
                   }
                 }
               }
@@ -91,11 +146,58 @@
           "name": "sap.fe.templates.ObjectPage",
           "options": {
             "settings": {
-              "entitySet": "SalesOrders"
+              "editableHeaderContent": false,
+              "contextPath": "/SalesOrders",
+              "controlConfiguration": {
+                "items/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "actions": {
+                    "CheckMaterialsAction": {
+                      "press": "printflow.orders.ext.MaterialsRequired.MaterialsRequiredActions.onCheckMaterials",
+                      "text": "{i18n>checkMaterials}",
+                      "icon": "sap-icon://factory",
+                      "requiresSelection": false
+                    }
+                  }
+                },
+                "payments/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "actions": {
+                    "RegisterPaymentAction": {
+                      "press": "printflow.orders.ext.PaymentDialog.PaymentDialogActions.onRegisterPayment",
+                      "text": "{i18n>registerPayment}",
+                      "icon": "sap-icon://money-bills",
+                      "requiresSelection": false
+                    }
+                  }
+                },
+                "deliveries/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "actions": {
+                    "ScheduleDeliveryAction": {
+                      "press": "printflow.orders.ext.DeliveryDialog.DeliveryDialogActions.onScheduleDelivery",
+                      "text": "{i18n>scheduleDelivery}",
+                      "icon": "sap-icon://shipping-status",
+                      "requiresSelection": false
+                    }
+                  }
+                }
+              }
             }
           }
+        },
+        "CreateOrderWizard": {
+          "type": "View",
+          "id": "CreateOrderWizard",
+          "name": "printflow.orders.ext.CreateOrderWizard.CreateOrderWizard"
         }
       }
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
+  },
+  "sap.fe": {
+    "app": {
+      "enableLazyLoading": true
     }
   }
 }

@@ -1,0 +1,6 @@
+code,name
+NOT_SCHEDULED,Not Scheduled
+SCHEDULED,Scheduled
+IN_TRANSIT,In Transit
+DELIVERED,Delivered
+FAILED,Failed

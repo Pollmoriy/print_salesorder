@@ -9,16 +9,25 @@
   "scripts": {
     "watch": "cds watch",
     "build": "cds build --production",
-    "start": "cds-serve"
+    "start": "cds run",
+    "watch-orders": "cds watch --open printflow.orders/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-customers": "cds watch --open printflow.customers/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-products": "cds watch --open printflow.products/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-materials": "cds watch --open printflow.materials/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-warehouses": "cds watch --open printflow.warehouses/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-productionorders": "cds watch --open printflow.productionorders/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-payments": "cds watch --open printflow.payments/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-deliveries": "cds watch --open printflow.deliveries/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "devDependencies": {
-    "@cap-js/cds-typer": ">=0.1",
     "@cap-js/cds-types": "^0.18.0",
     "@cap-js/sqlite": "^3",
     "@sap/cds-dk": "^10",
     "@types/node": "^24.0.0",
     "tsx": "^4",
-    "typescript": "^7.0.0"
+    "typescript": "^7.0.0",
+    "@cap-js/cds-typer": ">=0.1",
+    "cds-plugin-ui5": "^0.17.0"
   },
   "imports": {
     "#cds-models/*": "./@cds-models/*/index.js"
@@ -57,10 +66,22 @@
             }
           }
         }
-      },
-      "destinations": true,
-      "html5-repo": true
+      }
     }
   },
-  "sapux": []
+  "sapux": [
+    "app/orders",
+    "app/customers",
+    "app/products",
+    "app/materials",
+    "app/warehouses",
+    "app/productionorders",
+    "app/productionorders",
+    "app/payments",
+    "app/deliveries",
+    "app/deliveries"
+  ],
+  "workspaces": [
+    "app/*"
+  ]
 }

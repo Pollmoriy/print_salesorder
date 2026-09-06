@@ -1,0 +1,9 @@
+ID,code,name,description,unit,basePrice
+20000000-0000-4000-8000-000000000001,BC-100,Business Cards,"Premium business cards, 350gsm, matte or gloss finish",PIECE,0.15
+20000000-0000-4000-8000-000000000002,FL-200,Flyers A5,"A5 flyers, full colour, single or double sided",PIECE,0.2
+20000000-0000-4000-8000-000000000003,BR-300,Brochures Tri-fold,"Tri-fold brochures, A4 to DL, full colour",PIECE,0.6
+20000000-0000-4000-8000-000000000004,PO-400,Posters A2,"A2 posters, high-gloss photo paper",PIECE,4.5
+20000000-0000-4000-8000-000000000005,BN-500,Banners Vinyl,"PVC vinyl banners, custom size, eyelets included",SQM,12.0
+20000000-0000-4000-8000-000000000006,ST-600,Stickers Die-cut,"Die-cut vinyl stickers, weatherproof",PIECE,0.35
+20000000-0000-4000-8000-000000000007,LB-700,Labels Roll,Self-adhesive labels on a roll,PIECE,0.08
+20000000-0000-4000-8000-000000000008,CT-800,Catalogues Perfect-bound,"Perfect-bound product catalogues, up to 48 pages",PIECE,3.2
