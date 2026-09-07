@@ -9,3 +9,5 @@ db/*.db
 default-env.json
 db/*.sqlite-shm
 db/*.sqlite-wal
+# added by cds
+.cdsrc-private.json

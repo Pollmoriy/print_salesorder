@@ -34,7 +34,7 @@ sap.ui.define([
           : oBindingContext;
 
         const oModel = oOrderContext.getModel();
-        const oOperation = oModel.bindContext("SalesOrderService.materialsRequired(...)", oOrderContext);
+        const oOperation = oModel.bindContext("SalesOrderService.checkMaterialAvailability(...)", oOrderContext);
 
         await oOperation.execute();
 
