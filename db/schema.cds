@@ -136,6 +136,8 @@ entity SalesOrders : cuid, managed {
                               on payments.parent = $self;
   deliveries             : Composition of many Deliveries
                               on deliveries.parent = $self;
+  reservations : Composition of many MaterialReservations
+                 on reservations.order = $self;
 }
 
 entity OrderItems : cuid, managed {
@@ -237,4 +239,16 @@ entity BillOfMaterials : cuid, managed {
 
   product  : Association to Products  on product.code  = productCode;
   material : Association to Materials on material.code = materialCode;
+}
+
+entity MaterialReservations : cuid, managed {
+  order     : Association to SalesOrders not null;
+  material  : Association to Materials   not null;
+  warehouse : Association to Warehouses  not null;
+  quantity  : Decimal(12,3) not null;
+  status    : ReservationStatus default 'ACTIVE';
+}
+
+type ReservationStatus : String enum {
+  ACTIVE; RELEASED; CONSUMED;
 }

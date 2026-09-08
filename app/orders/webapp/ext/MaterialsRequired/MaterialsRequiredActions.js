@@ -6,15 +6,38 @@ sap.ui.define([
   "use strict";
 
   let _oDialog = null;
+  let _oOrderContext = null;
+
+  async function onReserveMaterials() {
+    const sStatus = _oOrderContext.getProperty("status");
+
+    if (sStatus === "CONFIRMED") {
+      MessageToast.show("Materials are already reserved for this order");
+      return;
+    }
+    if (sStatus !== "SUBMITTED") {
+      MessageToast.show(`Cannot reserve materials from status ${sStatus}`);
+      return;
+    }
+
+    const oModel = _oOrderContext.getModel();
+    const oOperation = oModel.bindContext("SalesOrderService.confirmOrder(...)", _oOrderContext);
+
+    try {
+      await oOperation.execute();
+      _oOrderContext.getBinding().refresh();
+      MessageToast.show("Materials reserved, order confirmed");
+    } catch (e) {
+      MessageToast.show(e.message || "Failed to reserve materials");
+    }
+  }
 
   async function getDialog() {
     if (!_oDialog) {
       _oDialog = await Fragment.load({
         name: "printflow.orders.ext.MaterialsRequired.MaterialsRequiredDialog",
         controller: {
-          onReserveMaterials: function () {
-            MessageToast.show("Coming soon: reserveMaterials() → CAP action");
-          },
+          onReserveMaterials: onReserveMaterials,
           onCloseMaterialsDialog: function (oEvent) {
             oEvent.getSource().getParent().close();
           }
@@ -26,16 +49,15 @@ sap.ui.define([
 
   return {
     onCheckMaterials: async function (oBindingContext, aSelectedContexts) {
+      _oOrderContext = oBindingContext.getBinding
+        ? oBindingContext.getBinding().getHeaderContext
+          ? oBindingContext.getBinding().getHeaderContext()
+          : oBindingContext
+        : oBindingContext;
+
       try {
-        const oOrderContext = oBindingContext.getBinding
-          ? oBindingContext.getBinding().getHeaderContext
-            ? oBindingContext.getBinding().getHeaderContext()
-            : oBindingContext
-          : oBindingContext;
-
-        const oModel = oOrderContext.getModel();
-        const oOperation = oModel.bindContext("SalesOrderService.checkMaterialAvailability(...)", oOrderContext);
-
+        const oModel = _oOrderContext.getModel();
+        const oOperation = oModel.bindContext("SalesOrderService.checkMaterialAvailability(...)", _oOrderContext);
         await oOperation.execute();
 
         const oResult = oOperation.getBoundContext().getObject();

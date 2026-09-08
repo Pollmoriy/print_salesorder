@@ -32,22 +32,26 @@ sap.ui.define([
       MessageToast.show("Please enter a valid amount");
       return;
     }
+    if (!sMethod) {
+      MessageToast.show("Please select a payment method");
+      return;
+    }
 
     const oModel = _oOrderContext.getModel();
-    const oListBinding = oModel.bindList("payments", _oOrderContext);
-    const oNewContext = oListBinding.create({
-      amount: Number(sAmount),
-      method: sMethod,
-      paidAt: sDate ? `${sDate}T00:00:00Z` : null,
-      status: "PENDING"
-    });
+    const oOperation = oModel.bindContext("SalesOrderService.registerPayment(...)", _oOrderContext);
+    oOperation.setParameter("amount", Number(sAmount));
+    oOperation.setParameter("method", sMethod);
+    oOperation.setParameter("paidAt", sDate ? `${sDate}T00:00:00Z` : null);
 
     try {
-      await oNewContext.created();
+      await oOperation.execute();
+      // action меняет paidAmount/paymentStatus на SalesOrders — обновляем страницу заказа
+      _oOrderContext.getBinding().refresh();
       MessageToast.show("Payment registered");
       oDialog.close();
     } catch (e) {
-      MessageToast.show("Failed to register payment: " + e.message);
+      // сообщение придёт из req.error на бэкенде ("Payment amount exceeds the remaining balance...")
+      MessageToast.show(e.message || "Failed to register payment");
     }
   }
 
