@@ -51,3 +51,10 @@ annotate service.Payments with @(
     SelectionFields: [ status, method, paidAt ],
   }
 );
+
+annotate service.Payments with @(
+  UI.Identification: [
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.completePayment', Label: 'Complete Payment' },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.refund',          Label: 'Refund' },
+  ]
+);

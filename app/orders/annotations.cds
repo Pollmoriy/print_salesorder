@@ -98,3 +98,8 @@ annotate service.Deliveries with {
         },
     };
 };
+
+annotate service.SalesOrders with @(
+  // Это скроет системную кнопку Create в стандартном интерфейсе UI5 / Fiori:
+  UI.CreateHidden: true
+);

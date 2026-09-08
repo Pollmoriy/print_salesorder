@@ -15,12 +15,12 @@ sap.ui.define([
 
     onInit: function () {
       const oModel = this.getOwnerComponent().getModel();
-      if (!oModel) {
-        // eslint-disable-next-line no-console
-        console.error("Default OData model is not configured — check manifest.json > sap.ui5.models");
-        return;
-      }
-      this._loadAll(oModel);
+      this._oModel = oModel;      // сохрани модель как поле, если ещё не сохраняешь
+      this._loadAll(oModel);      // это у тебя уже вызывается
+    },
+
+    onRefresh: function () {
+      this._loadAll(this._oModel);
     },
 
     _loadAll: async function (oModel) {

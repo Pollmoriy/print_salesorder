@@ -7,6 +7,7 @@
   displayBlock="true">
   <Page title="{i18n>createOrderTitle}" showNavButton="true" navButtonPress="onNavBack">
     <content>
+      <!-- Добавляем showNextButtonBuilder="false", если поддержано, или настраиваем шаги -->
       <Wizard id="orderWizard" complete="onWizardComplete">
 
         <!-- STEP 1: Customer -->
@@ -85,7 +86,7 @@
           </VBox>
         </WizardStep>
 
-        <!-- STEP 3: Summary (review only, no actions) -->
+        <!-- STEP 3: Summary -->
         <WizardStep id="stepSummary" title="{i18n>stepSummary}">
           <f:SimpleForm layout="ResponsiveGridLayout">
             <Label text="{i18n>customer}"/>
@@ -124,8 +125,8 @@
           }" class="sapMTextBold sapUiSmallMarginTop"/>
         </WizardStep>
 
-        <!-- STEP 4: Confirmation — final recap + real deep insert -->
-        <WizardStep id="stepConfirmation" title="{i18n>stepConfirmation}" showNextButton="false">
+        <!-- STEP 4: Confirmation — БЕЗ системной и кастомной кнопки Review -->
+        <WizardStep id="stepConfirmation" title="{i18n>stepConfirmation}">
           <f:SimpleForm layout="ResponsiveGridLayout">
             <Label text="{i18n>customer}"/>
             <Text text="{draft>/customer/name}"/>

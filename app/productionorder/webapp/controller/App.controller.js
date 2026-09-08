@@ -36,7 +36,7 @@ sap.ui.define([
                      { name: "reportProductionIssue", text: "Report Issue", icon: "sap-icon://alert" }],
     QUALITY_CHECK: [{ name: "completeProduction", text: "Complete",     icon: "sap-icon://complete" },
                      { name: "startRework",       text: "Rework",       icon: "sap-icon://undo" }],
-    REWORK:        [{ name: "startProduction",   text: "Restart",      icon: "sap-icon://media-play" }],
+    REWORK: [{ name: "resumeProduction", text: "Restart", icon: "sap-icon://media-play" }],
     COMPLETED:     [],
     CANCELLED:     []
   };
@@ -50,6 +50,16 @@ sap.ui.define([
     COMPLETED: ValueState.Success,
     CANCELLED: ValueState.Error
   };
+
+  const ACTION_MAP = {
+      startProduction:       "startProduction",
+      pauseProduction:       "pauseProduction",
+      resumeProduction:      "resumeProduction",
+      completeQualityCheck:  "sendToQualityCheck",
+      startRework:           "sendToRework",
+      completeProduction:    "completeProduction",
+      reportProductionIssue: null, // TODO: backend action ещё не спроектирован — см. 4.27.5
+    };
 
   return Controller.extend("printflow.productionorder.controller.App", {
 
@@ -192,10 +202,22 @@ sap.ui.define([
       }
     },
 
-    _onActionPress: function (oAction, oOrder, oParent) {
-      MessageToast.show(
-        `Скоро: ${oAction.name}() → CAP action для заказа ${oParent.orderNo || oOrder.ID}`
-      );
+    _onActionPress: async function (oAction, oOrder, oParent) {
+      const sBackendAction = ACTION_MAP[oAction.name];
+      if (!sBackendAction) {
+        MessageToast.show("Report Issue пока не реализован на backend");
+        return;
+      }
+      try {
+        const oOperation = this._oModel.bindContext(
+          `/ProductionOrders(ID=${oOrder.ID})/SalesOrderService.${sBackendAction}(...)`
+        );
+        await oOperation.execute();
+        MessageToast.show(`${oAction.text}: успешно`);
+        await this._loadList(); // список и timeline перерисуются со свежим статусом
+      } catch (oError) {
+        MessageToast.show(`Ошибка: ${oError.message || oError}`);
+      }
     }
   });
 });

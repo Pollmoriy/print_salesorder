@@ -173,6 +173,8 @@ sap.ui.define([
       switch (sStatus) {
         case "NOT_SCHEDULED":
           return [{ name: "scheduleDelivery", text: "Schedule", icon: "sap-icon://appointment-2" }];
+        case "SCHEDULED":                                          // ДОБАВЛЕНО — раньше кнопки не было вообще
+          return [{ name: "startDelivery", text: "Start Transit", icon: "sap-icon://shipping-status" }];
         case "IN_TRANSIT":
           return [{ name: "markDelivered", text: "Mark Delivered", icon: "sap-icon://accept" }];
         case "FAILED":
@@ -182,10 +184,18 @@ sap.ui.define([
       }
     },
 
-    _onActionPress: function (oAction, oDelivery, oParent) {
-      MessageToast.show(
-        `Скоро: ${oAction.name}() → CAP action для заказа ${oParent.orderNo || oDelivery.ID}`
-      );
+    _onActionPress: async function (oAction, oDelivery, oParent) {
+      const oModel = this.getOwnerComponent().getModel();
+      try {
+        const oOperation = oModel.bindContext(
+          `/Deliveries(ID=${oDelivery.ID})/SalesOrderService.${oAction.name}(...)`
+        );
+        await oOperation.execute();
+        MessageToast.show(`${oAction.text}: успешно`);
+        await this._loadList(oModel); // перерисовать список со свежими статусами
+      } catch (oError) {
+        MessageToast.show(`Ошибка: ${oError.message || oError}`);
+      }
     }
   });
 });

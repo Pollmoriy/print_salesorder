@@ -199,6 +199,8 @@ annotate service.ProductionOrders with @(
     { Value: plannedStart,        Label: 'Planned Start' },
     { Value: plannedEnd,          Label: 'Planned End' },
     { Value: estimatedCompletion, Label: 'Estimated Completion' },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.completePayment', Label: 'Complete Payment' },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.refund',          Label: 'Refund' },
     { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.pauseProduction',    Label: 'Pause',    Inline: true },
     { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.resumeProduction',   Label: 'Resume',   Inline: true },
     { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.sendToQualityCheck', Label: 'Send to QC', Inline: true },

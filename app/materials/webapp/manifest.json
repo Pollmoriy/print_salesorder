@@ -127,7 +127,19 @@
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/Materials"
+              "contextPath": "/Materials",
+              "controlConfiguration": {
+                "stocks/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "actions": {
+                    "AddToWarehouseAction": {
+                      "press": "printflow.materials.ext.AddStockDialog.AddStockDialogActions.onAddToWarehouse",
+                      "text": "Add to Warehouse",
+                      "icon": "sap-icon://add",
+                      "requiresSelection": false
+                    }
+                  }
+                }
+              }
             }
           }
         }

@@ -116,7 +116,6 @@ service SalesOrderService @(
     virtual null as criticalCriticality : Integer,
   };
 
-  @Capabilities.InsertRestrictions.Insertable: false
   @odata.draft.enabled
   entity SalesOrders as projection on db.SalesOrders {
       *,
@@ -171,6 +170,7 @@ service SalesOrderService @(
         else 0
       end as productionCriticality : Integer
   } actions {
+    action startProduction()      returns ProductionOrders;
     action pauseProduction()    returns ProductionOrders;
     action resumeProduction()   returns ProductionOrders;
     action sendToQualityCheck() returns ProductionOrders;
@@ -191,6 +191,9 @@ service SalesOrderService @(
       end as paymentTxCriticality : Integer,
 
       virtual null as customerName : String(120),
+  } actions {
+    action completePayment() returns Payments;
+    action refund()          returns Payments;
   };
 
   @Capabilities.DeleteRestrictions.Deletable: false
@@ -205,9 +208,11 @@ service SalesOrderService @(
         else 0
       end as deliveryCriticality : Integer
   } actions {
-    action startDelivery()      returns Deliveries;
-    action markDelivered()      returns Deliveries;
-    action markDeliveryFailed() returns Deliveries;
+    action scheduleDelivery(address: String, scheduledDate: Date) returns Deliveries; 
+    action startDelivery()      returns Deliveries; 
+    action markDelivered()      returns Deliveries; 
+    action markDeliveryFailed() returns Deliveries; 
+    action retryDelivery()      returns Deliveries; 
   };
 
   @odata.draft.enabled
