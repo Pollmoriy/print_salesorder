@@ -199,7 +199,15 @@ annotate service.ProductionOrders with @(
     { Value: plannedStart,        Label: 'Planned Start' },
     { Value: plannedEnd,          Label: 'Planned End' },
     { Value: estimatedCompletion, Label: 'Estimated Completion' },
-  ]
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.completePayment', Label: 'Complete Payment' },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.refund',          Label: 'Refund' },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.pauseProduction',    Label: 'Pause',    Inline: true },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.resumeProduction',   Label: 'Resume',   Inline: true },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.sendToQualityCheck', Label: 'Send to QC', Inline: true },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.sendToRework',       Label: 'Rework',   Inline: true },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.completeProduction', Label: 'Complete', Inline: true },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.cancelProduction',   Label: 'Cancel',   Inline: true },
+      ]
 );
 
 // ---------------------------------------------------------------------------
@@ -243,6 +251,11 @@ annotate service.Deliveries with @(
     { Value: status,         Label: 'Status', Criticality: deliveryCriticality },
     { Value: scheduledDate,  Label: 'Scheduled Date' },
     { Value: trackingNumber, Label: 'Tracking Number' },
+  ],
+  UI.Identification: [
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.startDelivery',      Label: 'Start Delivery' },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.markDelivered',      Label: 'Mark Delivered' },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.markDeliveryFailed', Label: 'Mark Failed' },
   ]
 );
 
@@ -282,6 +295,13 @@ annotate service.SalesOrders with @(
       ID     : 'TotalFacet',
       Target : '@UI.FieldGroup#HeaderTotal',
     },
+  ],
+  UI.Identification: [
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.submitOrder',     Label: 'Submit' },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.confirmOrder',    Label: 'Confirm' },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.cancelOrder',     Label: 'Cancel' },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.startProduction', Label: 'Start Production' },
+    { $Type: 'UI.DataFieldForAction', Action: 'SalesOrderService.markOrderReady',  Label: 'Mark Ready' },
   ],
   UI.FieldGroup #HeaderStatus : {
     Data : [

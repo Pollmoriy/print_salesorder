@@ -21,6 +21,29 @@ service SalesOrderService @(
   requires: 'authenticated-user'
 ) {
 
+  // =========================================================
+  // 1. UNBOUND ACTIONS (Глобальные операции сервиса)
+  // =========================================================
+
+  action addStock(
+    material_ID       : UUID,
+    warehouse_ID      : UUID,
+    quantity          : Decimal(12,3),
+    reorderThreshold  : Decimal(12,3),
+    criticalThreshold : Decimal(12,3)
+  ) returns MaterialStocks;
+
+  action transferMaterial(
+    material_ID      : UUID,
+    fromWarehouse_ID : UUID,
+    toWarehouse_ID   : UUID,
+    quantity         : Decimal(12,3)
+  ) returns array of MaterialStocks;
+
+  // =========================================================
+  // 2. ENTITIES (Сущности сервиса)
+  // =========================================================
+
   @odata.draft.enabled
   entity Customers as projection on db.Customers {
     *,
@@ -75,6 +98,11 @@ service SalesOrderService @(
     end as stockCriticality : Integer,
   };
 
+  @Capabilities.InsertRestrictions.Insertable: false
+  @Capabilities.UpdateRestrictions.Updatable: false
+  @Capabilities.DeleteRestrictions.Deletable: false
+  entity MaterialReservations as projection on db.MaterialReservations;
+
   @readonly entity MaterialStatusCodes as projection on db.MaterialStatusCodes;
 
   @odata.draft.enabled
@@ -88,7 +116,6 @@ service SalesOrderService @(
     virtual null as criticalCriticality : Integer,
   };
 
-  @Capabilities.InsertRestrictions.Insertable: false
   @odata.draft.enabled
   entity SalesOrders as projection on db.SalesOrders {
       *,
@@ -143,8 +170,13 @@ service SalesOrderService @(
         else 0
       end as productionCriticality : Integer
   } actions {
+    action startProduction()      returns ProductionOrders;
     action pauseProduction()    returns ProductionOrders;
+    action resumeProduction()   returns ProductionOrders;
+    action sendToQualityCheck() returns ProductionOrders;
+    action sendToRework()       returns ProductionOrders;
     action completeProduction() returns ProductionOrders;
+    action cancelProduction()   returns ProductionOrders;
   };
 
   @Capabilities.InsertRestrictions.Insertable: false
@@ -159,9 +191,11 @@ service SalesOrderService @(
       end as paymentTxCriticality : Integer,
 
       virtual null as customerName : String(120),
+  } actions {
+    action completePayment() returns Payments;
+    action refund()          returns Payments;
   };
 
-  @Capabilities.InsertRestrictions.Insertable: false
   @Capabilities.DeleteRestrictions.Deletable: false
   entity Deliveries as projection on db.Deliveries {
       *,
@@ -173,9 +207,18 @@ service SalesOrderService @(
         when status = 'FAILED'     then 1
         else 0
       end as deliveryCriticality : Integer
+  } actions {
+    action scheduleDelivery(address: String, scheduledDate: Date) returns Deliveries; 
+    action startDelivery()      returns Deliveries; 
+    action markDelivered()      returns Deliveries; 
+    action markDeliveryFailed() returns Deliveries; 
+    action retryDelivery()      returns Deliveries; 
   };
 
-  @readonly entity BillOfMaterials       as projection on db.BillOfMaterials;
+  @odata.draft.enabled
+  entity BillOfMaterials as projection on db.BillOfMaterials;
+
+  // Code Lists / Reference Entities
   @readonly entity OrderStatusCodes      as projection on db.OrderStatusCodes;
   @readonly entity UrgencyCodes          as projection on db.UrgencyCodes;
   @readonly entity PaymentStatusCodes    as projection on db.PaymentStatusCodes;

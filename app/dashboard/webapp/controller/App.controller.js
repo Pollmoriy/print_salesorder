@@ -20,15 +20,13 @@ sap.ui.define([
   return Controller.extend("printflow.dashboard.controller.App", {
 
     onInit: function () {
-      this.getView().setModel(new JSONModel({ text: this._getGreeting() }), "greeting");
-
       const oModel = this.getOwnerComponent().getModel();
-      if (!oModel) {
-        // eslint-disable-next-line no-console
-        console.error("Default OData model is not configured — check manifest.json > sap.ui5.models");
-        return;
-      }
-      this._loadAll(oModel);
+      this._oModel = oModel;      // сохрани модель как поле, если ещё не сохраняешь
+      this._loadAll(oModel);      // это у тебя уже вызывается
+    },
+
+    onRefresh: function () {
+      this._loadAll(this._oModel);
     },
 
     _getGreeting: function () {

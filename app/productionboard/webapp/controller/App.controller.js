@@ -32,7 +32,7 @@ sap.ui.define([
                      { name: "reportProductionIssue", text: "Report Issue", icon: "sap-icon://alert" }],
     QUALITY_CHECK: [{ name: "completeProduction", text: "Complete",     icon: "sap-icon://complete" },
                      { name: "startRework",       text: "Rework",       icon: "sap-icon://undo" }],
-    REWORK:        [{ name: "startProduction",   text: "Restart",      icon: "sap-icon://media-play" }],
+    REWORK: [{ name: "resumeProduction", text: "Restart", icon: "sap-icon://media-play" }],
     COMPLETED:     []
   };
 
@@ -43,6 +43,16 @@ sap.ui.define([
     QUALITY_CHECK: ValueState.Information,
     REWORK: ValueState.Error,
     COMPLETED: ValueState.Success
+  };
+
+  const ACTION_MAP = {
+    startProduction:       "startProduction",
+    pauseProduction:       "pauseProduction",
+    resumeProduction:      "resumeProduction",
+    completeQualityCheck:  "sendToQualityCheck",
+    startRework:           "sendToRework",
+    completeProduction:    "completeProduction",
+    reportProductionIssue: null,
   };
 
   return Controller.extend("printflow.productionboard.controller.App", {
@@ -151,10 +161,23 @@ sap.ui.define([
       return oCard;
     },
 
-    _onActionPress: function (oAction, oOrder, oParent) {
-      MessageToast.show(
-        `Скоро: ${oAction.name}() → CAP action для заказа ${oParent.orderNo || oOrder.ID}`
-      );
+    _onActionPress: async function (oAction, oOrder, oParent) {
+      const sBackendAction = ACTION_MAP[oAction.name];
+      if (!sBackendAction) {
+        MessageToast.show("Report Issue пока не реализован на backend");
+        return;
+      }
+      try {
+        const oModel = this.getOwnerComponent().getModel();
+        const oOperation = oModel.bindContext(
+          `/ProductionOrders(ID=${oOrder.ID})/SalesOrderService.${sBackendAction}(...)`
+        );
+        await oOperation.execute();
+        MessageToast.show(`${oAction.text}: успешно`);
+        await this._loadBoard(oModel); // канбан перестроится по свежим статусам, карточка сама переедет в нужную колонку
+      } catch (oError) {
+        MessageToast.show(`Ошибка: ${oError.message || oError}`);
+      }
     }
   });
 });

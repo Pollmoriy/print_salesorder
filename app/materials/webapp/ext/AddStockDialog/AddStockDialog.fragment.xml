@@ -1,0 +1,27 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+  <Dialog title="Add to Warehouse" contentWidth="24rem">
+    <content>
+      <VBox class="sapUiSmallMargin">
+        <Label text="Warehouse" labelFor="warehouseSelect"/>
+        <Select id="warehouseSelect" items="{path: '/Warehouses'}" width="100%">
+          <core:Item key="{ID}" text="{name}"/>
+        </Select>
+
+        <Label text="Quantity" labelFor="qtyInput" class="sapUiSmallMarginTop"/>
+        <Input id="qtyInput" type="Number" placeholder="0"/>
+
+        <Label text="Reorder threshold" labelFor="reorderInput" class="sapUiSmallMarginTop"/>
+        <Input id="reorderInput" type="Number" placeholder="0"/>
+
+        <Label text="Critical threshold" labelFor="criticalInput" class="sapUiSmallMarginTop"/>
+        <Input id="criticalInput" type="Number" placeholder="0"/>
+      </VBox>
+    </content>
+    <beginButton>
+      <Button text="Add" icon="sap-icon://accept" type="Emphasized" press=".onConfirmAddStock"/>
+    </beginButton>
+    <endButton>
+      <Button text="Cancel" icon="sap-icon://decline" press=".onCancelAddStock"/>
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

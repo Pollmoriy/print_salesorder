@@ -5,6 +5,9 @@
   displayBlock="true">
   <App>
     <Page title="{i18n>pageTitle}" showHeader="true" class="sapUiContentPadding">
+      <headerContent>
+        <Button icon="sap-icon://refresh" tooltip="Refresh" press=".onRefresh"/>
+      </headerContent>
       <content>
         <VBox>
           <Title text="Analytics" level="H2" class="dashGreetingTitle"/>

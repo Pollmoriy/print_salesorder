@@ -127,21 +127,7 @@
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/Payments",
-              "content": {
-                "header": {
-                  "actions": {
-                    "CompletePaymentAction": {
-                      "press": "printflow.payments.ext.PaymentActions.PaymentActionsHandlers.onCompletePayment",
-                      "text": "Complete Payment"
-                    },
-                    "RefundAction": {
-                      "press": "printflow.payments.ext.PaymentActions.PaymentActionsHandlers.onRefund",
-                      "text": "Refund"
-                    }
-                  }
-                }
-              }
+              "contextPath": "/Payments"
             }
           }
         }

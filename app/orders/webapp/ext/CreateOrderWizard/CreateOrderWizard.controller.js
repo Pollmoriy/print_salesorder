@@ -14,6 +14,14 @@ sap.ui.define([
     onInit: function () {
       PageController.prototype.onInit.apply(this, arguments);
 
+      // Привязываем слушатель событий роутера
+      const oRouter = this.getAppComponent().getRouter();
+      oRouter.getRoute("CreateOrderWizard").attachPatternMatched(this._onRouteMatched, this);
+
+      this._initDraftModel();
+    },
+
+    _initDraftModel: function () {
       const oDraftModel = new JSONModel({
         customer: null,
         urgencyLevel: "STANDARD",
@@ -22,12 +30,52 @@ sap.ui.define([
         items: [],
         orderTotal: 0,
         busy: false,
+        submitted: false, // Флаг, был ли заказ успешно отправлен
         steps: {
           customer: { valid: false },
           products: { valid: false }
         }
       });
       this.getView().setModel(oDraftModel, "draft");
+    },
+
+    _onRouteMatched: function () {
+      const oDraftModel = this.getView().getModel("draft");
+      
+      
+      // Если предыдущий заказ был отправлен/сохранен — сбрасываем форму полностью
+      if (!oDraftModel || oDraftModel.getProperty("/submitted")) {
+        this._initDraftModel();
+        
+        // Возвращаем Wizard на самый первый шаг
+        const oWizard = this.byId("orderWizard");
+        if (oWizard) {
+          oWizard.discardProgress(this.byId("stepCustomer"));
+        }
+      }
+    },
+
+    onWizardComplete: function () {
+      const oWizard = this.byId("orderWizard");
+      const oStepSummary = this.byId("stepSummary");
+
+      if (oWizard && oStepSummary) {
+        oWizard.goToStep(oStepSummary);
+      }
+    },
+
+    // --- Navigation & Review Button ---
+    onNavBack: function () {
+      this.getAppComponent().getRouter().navTo("SalesOrdersList");
+    },
+
+    onReviewPress: function () {
+      const oWizard = this.byId("orderWizard");
+      const oStepSummary = this.byId("stepSummary");
+      if (oWizard && oStepSummary) {
+        // Переходим на шаг 3 (Summary) для проверки введенных данных
+        oWizard.goToStep(oStepSummary);
+      }
     },
 
     // --- Step 1: Customer ---
@@ -139,43 +187,91 @@ sap.ui.define([
       oDraft.setProperty("/steps/products/valid", bAllValid);
     },
 
-    // --- Navigation ---
-    onNavBack: function () {
-      this.getAppComponent().getRouter().navTo("SalesOrdersList");
-    },
-
-    // --- Step 4: Confirmation — Stage 2 mock flow (no backend write yet;
-    // real deep-insert + draft activation comes in Stage 3-4, see plan) ---
-
-    onSaveDraft: function () {
+    // --- Draft & Submit Operations ---
+    _createDraftOrder: async function () {
+      const oModel = this.getView().getModel();
       const oDraft = this.getView().getModel("draft").getData();
-      MessageToast.show(
-        this.getView().getModel("i18n").getResourceBundle()
-          .getText("draftSaved", [oDraft.customer?.name || ""])
-      );
-      this.onNavBack();
+
+      const oListBinding = oModel.bindList("/SalesOrders");
+      const oOrderContext = oListBinding.create({
+        customer_ID: oDraft.customer.ID,
+        urgencyLevel: oDraft.urgencyLevel,
+        requestedDeliveryDate: oDraft.requestedDeliveryDate,
+        discountPercent: Number(oDraft.discountPercent) || 0,
+        totalAmount: Number(oDraft.orderTotal) || 0 // <--- Явно передаем итоговую сумму заказа
+      });
+      await oOrderContext.created();
+
+      const oItemsBinding = oModel.bindList("items", oOrderContext);
+      await Promise.all(oDraft.items.map((oItem) => {
+        const fQty = Number(oItem.quantity) || 0;
+        const fPrice = Number(oItem.unitPrice) || 0;
+        const fLineTotal = +(fQty * fPrice).toFixed(2);
+
+        return oItemsBinding.create({
+          product_ID: oItem.productId,
+          quantity: fQty,
+          unitPrice: fPrice,
+          finishingOptions: oItem.finishingOptions || "",
+          lineTotal: fLineTotal // <--- Явно передаем сумму по позиции
+        }).created();
+      }));
+
+      return oOrderContext;
     },
 
-    onSubmitOrder: function () {
-      const oDraft = this.getView().getModel("draft").getData();
-      const oBundle = this.getView().getModel("i18n").getResourceBundle();
-      MessageBox.success(
-        oBundle.getText("orderSubmittedDetail", [
-          oDraft.customer?.name || "",
-          oDraft.items.length,
-          oDraft.orderTotal
-        ]),
-        {
-          title: oBundle.getText("orderSubmitted"),
-          onClose: () => this.onNavBack()
-        }
-      );
+    _activateDraft: async function (oOrderContext) {
+      const oModel = oOrderContext.getModel();
+      const oOperation = oModel.bindContext("SalesOrderService.draftActivate(...)", oOrderContext);
+      return oOperation.execute();
     },
 
-    onWizardComplete: function () {
-      const oWizard = this.byId("orderWizard");
-      const oSummaryStep = this.byId("stepSummary");
-      oWizard.goToStep(oSummaryStep);
+    onSaveDraft: async function () {
+      const oDraftModel = this.getView().getModel("draft");
+      if (!oDraftModel.getProperty("/steps/customer/valid") || !oDraftModel.getProperty("/steps/products/valid")) {
+        MessageToast.show("Fill in the client and at least one item before saving");
+        return;
+      }
+      oDraftModel.setProperty("/busy", true);
+      try {
+        await this._createDraftOrder();
+        oDraftModel.setProperty("/submitted", true); // Выставляем флаг успеха
+        MessageToast.show(
+          this.getView().getModel("i18n").getResourceBundle()
+            .getText("draftSaved", [oDraftModel.getProperty("/customer").name || ""])
+        );
+        this.onNavBack();
+      } catch (oError) {
+        MessageBox.error("Failed to save draft: " + (oError.message || oError));
+      } finally {
+        oDraftModel.setProperty("/busy", false);
+      }
     },
+
+    onSubmitOrder: async function () {
+      const oDraftModel = this.getView().getModel("draft");
+      if (!oDraftModel.getProperty("/steps/customer/valid") || !oDraftModel.getProperty("/steps/products/valid")) {
+        MessageToast.show("Fill in the client and at least one item before sending");
+        return;
+      }
+      
+      oDraftModel.setProperty("/busy", true);
+      try {
+        const oOrderContext = await this._createDraftOrder();
+        const oActiveContext = await this._activateDraft(oOrderContext);
+        const oModel = this.getView().getModel();
+        oModel.refresh();
+        oDraftModel.setProperty("/submitted", true);
+        MessageBox.success("The order has been saved and sent successfully!", {
+          onClose: () => {
+            this.onNavBack();
+          }
+        });
+      } catch (oError) {
+        MessageBox.error("Error saving: " + (oError.message || oError));
+      } finally {
+        oDraftModel.setProperty("/busy", false);
+      }
+    }
   });
 });
