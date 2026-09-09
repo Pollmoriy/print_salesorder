@@ -147,12 +147,18 @@ service SalesOrderService @(
     function checkMaterialAvailability() returns array of MaterialRequirement;
     function getOrderSummary()           returns OrderSummary;
 
+    @requires: ['SalesManager', 'Administrator']
     action submitOrder()     returns SalesOrders;
+    @requires: ['SalesManager', 'Administrator']
     action confirmOrder()    returns SalesOrders;
+    @requires: ['SalesManager', 'Administrator']
     action cancelOrder()     returns SalesOrders;
+    @requires: ['ProductionManager', 'Administrator']
     action startProduction() returns SalesOrders;
+    @requires: ['ProductionManager', 'SalesManager', 'Administrator']
     action markOrderReady()  returns SalesOrders;
 
+    @requires: ['SalesManager', 'Administrator']
     action registerPayment(amount: Decimal(11,2), method: db.PaymentMethod, paidAt: DateTime) returns Payments;
   };
 
@@ -171,11 +177,17 @@ service SalesOrderService @(
       end as productionCriticality : Integer
   } actions {
     action startProduction()      returns ProductionOrders;
+    @requires: ['ProductionManager', 'Administrator']
     action pauseProduction()    returns ProductionOrders;
+    @requires: ['ProductionManager', 'Administrator']
     action resumeProduction()   returns ProductionOrders;
+    @requires: ['ProductionManager', 'Administrator']
     action sendToQualityCheck() returns ProductionOrders;
+    @requires: ['ProductionManager', 'Administrator']
     action sendToRework()       returns ProductionOrders;
+    @requires: ['ProductionManager', 'Administrator']
     action completeProduction() returns ProductionOrders;
+    @requires: ['ProductionManager', 'Administrator']
     action cancelProduction()   returns ProductionOrders;
   };
 
@@ -192,7 +204,9 @@ service SalesOrderService @(
 
       virtual null as customerName : String(120),
   } actions {
+    @requires: ['SalesManager', 'Administrator']
     action completePayment() returns Payments;
+    @requires: ['SalesManager', 'Administrator']
     action refund()          returns Payments;
   };
 
@@ -226,4 +240,9 @@ service SalesOrderService @(
   @readonly entity PaymentMethodCodes    as projection on db.PaymentMethodCodes;
   @readonly entity PaymentTxStatusCodes  as projection on db.PaymentTxStatusCodes;
   @readonly entity DeliveryStatusCodes   as projection on db.DeliveryStatusCodes;
+  annotate SalesOrderService.Materials       with @(requires: ['ProductionManager', 'Administrator']);
+  annotate SalesOrderService.MaterialStocks  with @(requires: ['ProductionManager', 'Administrator']);
+  annotate SalesOrderService.Warehouses      with @(requires: ['ProductionManager', 'Administrator']);
+  annotate SalesOrderService.BillOfMaterials with @(requires: ['ProductionManager', 'Administrator']);
 }
+

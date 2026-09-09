@@ -1,5 +1,32 @@
 {
-  "scopes": [],
+  "xsappname": "print-salesorder",
+  "tenant-mode": "dedicated",
+  "description": "PrintFlow security profile",
+  "scopes": [
+    { "name": "$XSAPPNAME.SalesManager", "description": "Sales Manager" },
+    { "name": "$XSAPPNAME.ProductionManager", "description": "Production Manager" },
+    { "name": "$XSAPPNAME.Administrator", "description": "Administrator" }
+  ],
   "attributes": [],
-  "role-templates": []
+  "role-templates": [
+    {
+      "name": "SalesManager",
+      "description": "Sales Manager",
+      "scope-references": ["$XSAPPNAME.SalesManager"]
+    },
+    {
+      "name": "ProductionManager",
+      "description": "Production Manager",
+      "scope-references": ["$XSAPPNAME.ProductionManager"]
+    },
+    {
+      "name": "Administrator",
+      "description": "Administrator - full access",
+      "scope-references": [
+        "$XSAPPNAME.SalesManager",
+        "$XSAPPNAME.ProductionManager",
+        "$XSAPPNAME.Administrator"
+      ]
+    }
+  ]
 }
