@@ -60,9 +60,19 @@
           "users": {
             "alice": {
               "password": "alice",
-              "roles": [
-                "authenticated-user"
-              ]
+              "roles": ["authenticated-user"]
+            },
+            "sales": {
+              "password": "sales",
+              "roles": ["SalesManager"]
+            },
+            "prod": {
+              "password": "prod",
+              "roles": ["ProductionManager"]
+            },
+            "admin": {
+              "password": "admin",
+              "roles": ["Administrator"]
             }
           }
         }
