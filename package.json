@@ -9,7 +9,7 @@
   "scripts": {
     "watch": "cds watch",
     "build": "cds build --production",
-    "start": "cds run",
+    "start": "cds-serve",
     "watch-orders": "cds watch --open printflow.orders/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-customers": "cds watch --open printflow.customers/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-products": "cds watch --open printflow.products/index.html?sap-ui-xx-viewCache=false --livereload false",

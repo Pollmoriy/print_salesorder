@@ -58,7 +58,6 @@ sap.ui.define([
         this._renderAttention(aOrders, aProductionOrders, aMaterials);
         this._renderRecentOrders(aOrders);
       } catch (oError) {
-        // eslint-disable-next-line no-console
         console.error("Failed to load dashboard data:", oError);
       }
     },
