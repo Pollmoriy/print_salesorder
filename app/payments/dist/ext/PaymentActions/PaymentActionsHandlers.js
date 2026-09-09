@@ -1,0 +1,2 @@
+sap.ui.define(["sap/m/MessageToast"],function(n){"use strict";function e(e){n.show(`Скоро: ${e}() → CAP action`)}return{onCompletePayment:function(){e("registerPayment")},onRefund:function(){e("refundPayment")}}});
+//# sourceMappingURL=PaymentActionsHandlers.js.map

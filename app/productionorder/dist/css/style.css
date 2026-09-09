@@ -1,0 +1,61 @@
+/* Фиксируем высоту страницы для корректного скролла внутри списка/деталей */
+.sapMPage > section {
+  height: 100%;
+}
+
+/* Список заказов слева */
+.orderListContainer {
+  border-right: 1px solid #e5e5e5;
+  background-color: #ffffff;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Детальная панель справа */
+.detailContainer {
+  flex: 1;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  overflow-y: auto;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Заголовки разделов */
+.sectionTitle {
+  margin: 1.5rem 0 0.75rem 0;
+  font-weight: 600;
+}
+
+.sectionTitle:first-child {
+  margin-top: 0;
+}
+
+/* Таймлайн / Этапы производства */
+.prodTimeline {
+  align-items: center; /* Центрируем иконки/круги и коннекторы по вертикали */
+  padding: 1rem 0;
+  gap: 0.25rem;
+}
+
+.prodTimelineStage {
+  min-width: 100px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.prodTimelineConnector {
+  flex: 1;
+  max-width: 3rem;
+  height: 2px;
+  background-color: #d9d9d9;
+  margin: 0 0.5rem;
+  align-self: center; /* Линия соединителя строго по центру */
+}
+
+.prodTimelineCurrentText {
+  font-weight: bold;
+  color: #0a6ed1; /* Выделение текущего этапа цветом */
+}

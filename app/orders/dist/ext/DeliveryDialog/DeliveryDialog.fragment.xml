@@ -1,0 +1,22 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+  <Dialog title="Schedule Delivery" contentWidth="24rem">
+    <content>
+      <VBox class="sapUiSmallMargin">
+        <Label text="Address" labelFor="deliveryAddressInput"/>
+        <TextArea id="deliveryAddressInput" rows="2"/>
+
+        <Label text="Date" labelFor="deliveryDatePicker" class="sapUiSmallMarginTop"/>
+        <DatePicker id="deliveryDatePicker" valueFormat="yyyy-MM-dd" displayFormat="medium"/>
+
+        <Label text="Delivery Method" labelFor="deliveryMethodInput" class="sapUiSmallMarginTop"/>
+        <Input id="deliveryMethodInput" placeholder="e.g. Courier, Pickup"/>
+      </VBox>
+    </content>
+    <beginButton>
+      <Button text="Schedule" icon="sap-icon://accept" tooltip="Save delivery schedule" type="Emphasized" press=".onConfirmScheduleDelivery"/>
+    </beginButton>
+    <endButton>
+      <Button text="Cancel" icon="sap-icon://decline" tooltip="Discard and close" press=".onCancelScheduleDelivery"/>
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

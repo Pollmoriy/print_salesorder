@@ -1,0 +1,26 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+  <Dialog title="Register Payment" contentWidth="24rem">
+    <content>
+      <VBox class="sapUiSmallMargin">
+        <Label text="Amount" labelFor="paymentAmountInput"/>
+        <Input id="paymentAmountInput" type="Number" placeholder="0.00"/>
+
+        <Label text="Method" labelFor="paymentMethodSelect" class="sapUiSmallMarginTop"/>
+        <Select id="paymentMethodSelect">
+          <core:Item key="CARD" text="Card"/>
+          <core:Item key="BANK_TRANSFER" text="Bank Transfer"/>
+          <core:Item key="CASH" text="Cash"/>
+        </Select>
+
+        <Label text="Date" labelFor="paymentDatePicker" class="sapUiSmallMarginTop"/>
+        <DatePicker id="paymentDatePicker" valueFormat="yyyy-MM-dd" displayFormat="medium"/>
+      </VBox>
+    </content>
+    <beginButton>
+      <Button text="Register" icon="sap-icon://accept" tooltip="Save this payment" type="Emphasized" press=".onConfirmRegisterPayment"/>
+    </beginButton>
+    <endButton>
+      <Button text="Cancel" icon="sap-icon://decline" tooltip="Discard and close" press=".onCancelRegisterPayment"/>
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

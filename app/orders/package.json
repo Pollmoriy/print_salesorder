@@ -18,6 +18,7 @@
     "ui5-tooling-transpile": "^3"
   },
   "scripts": {
+    "build": "ui5 build --clean-dest -a",
     "deploy-config": "npx -p @sap/ux-ui5-tooling fiori add deploy-config cf"
   }
 }

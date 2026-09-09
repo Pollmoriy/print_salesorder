@@ -310,7 +310,7 @@ module.exports = cds.service.impl(async function () {
   });
 
   // =========================================================================
-  // Stage 4 — Business Logic (ИСПРАВЛЕННАЯ версия — пишем через cds.db)
+  // Business Logic 
   // =========================================================================
 
   const db = cds.db;
@@ -318,10 +318,6 @@ module.exports = cds.service.impl(async function () {
     SalesOrders, OrderItems, ProductionOrders, Payments, Deliveries,
     Materials, MaterialStocks, MaterialReservations, BillOfMaterials,
   } = cds.entities('printflow.db');
-
-  // -------------------------------------------------------------------------
-  // Helpers (без изменений в логике, только tx теперь = db.tx(req))
-  // -------------------------------------------------------------------------
 
   const URGENCY_SURCHARGE_RATE = { STANDARD: 0, EXPRESS: 0.08, URGENT: 0.15 };
   const DELIVERY_FLAT_COST = 10;
@@ -555,8 +551,7 @@ module.exports = cds.service.impl(async function () {
   });
 
   // -------------------------------------------------------------------------
-  // StartProduction — теперь создаёт PLANNED, а не сразу IN_PROGRESS
-  // (см. 4.23 — почему это поменялось на основе твоего реального Production Board)
+  // StartProduction 
   // -------------------------------------------------------------------------
 
   this.on('startProduction', 'SalesOrders', async (req) => {
@@ -604,7 +599,7 @@ module.exports = cds.service.impl(async function () {
   });
 
   // -------------------------------------------------------------------------
-  // ProductionOrders — полная машина состояний, включая новый старт из PLANNED
+  // ProductionOrders 
   // -------------------------------------------------------------------------
 
   this.on('startProduction', 'ProductionOrders', async (req) => {
@@ -691,9 +686,7 @@ module.exports = cds.service.impl(async function () {
   });
 
   // -------------------------------------------------------------------------
-  // Payments — ИСПРАВЛЕНО: убран несуществующий .returning(), плюс добавлены
-  // completePayment / refund (это уже есть на твоём Payment Object Page —
-  // раньше их просто не было в backend, отсюда и ошибка)
+  // Payments 
   // -------------------------------------------------------------------------
 
   this.on('registerPayment', 'SalesOrders', async (req) => {
@@ -784,8 +777,7 @@ module.exports = cds.service.impl(async function () {
   });
 
   // -------------------------------------------------------------------------
-  // BOM / Materials / Warehouses — addStock, transferMaterial (без изменений
-  // логики, только db.tx вместо this.tx)
+  // Materials / Warehouses 
   // -------------------------------------------------------------------------
 
   this.on('addStock', async (req) => {

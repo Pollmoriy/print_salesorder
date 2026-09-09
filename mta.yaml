@@ -69,6 +69,46 @@ modules:
           artifacts:
             - orders.zip
           target-path: app/
+        - name: printsalesordercustomers
+          artifacts:
+            - customers.zip
+          target-path: app/
+        - name: printsalesorderproducts
+          artifacts:
+            - products.zip
+          target-path: app/
+        - name: printsalesordermaterials
+          artifacts:
+            - materials.zip
+          target-path: app/
+        - name: printsalesorderwarehouses
+          artifacts:
+            - warehouses.zip
+          target-path: app/
+        - name: printsalesorderproductionorder
+          artifacts:
+            - productionorder.zip
+          target-path: app/
+        - name: printsalesorderproductionboard
+          artifacts:
+            - productionboard.zip
+          target-path: app/
+        - name: printsalesorderpayments
+          artifacts:
+            - payments.zip
+          target-path: app/
+        - name: printsalesorderdelivery
+          artifacts:
+            - delivery.zip
+          target-path: app/
+        - name: printsalesorderdashboard
+          artifacts:
+            - dashboard.zip
+          target-path: app/
+        - name: printsalesorderanalytics
+          artifacts:
+            - analytics.zip
+          target-path: app/
     requires:
       - name: print-salesorder-auth
       - name: srv-api
@@ -81,6 +121,126 @@ modules:
   - name: printsalesorderorders
     type: html5
     path: app/orders
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+  
+  - name: printsalesordercustomers
+    type: html5
+    path: app/customers
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: printsalesorderproducts
+    type: html5
+    path: app/products
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: printsalesordermaterials
+    type: html5
+    path: app/materials
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: printsalesorderwarehouses
+    type: html5
+    path: app/warehouses
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: printsalesorderproductionorder
+    type: html5
+    path: app/productionorder
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: printsalesorderproductionboard
+    type: html5
+    path: app/productionboard
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: printsalesorderpayments
+    type: html5
+    path: app/payments
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: printsalesorderdelivery
+    type: html5
+    path: app/delivery
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: printsalesorderdashboard
+    type: html5
+    path: app/dashboard
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: printsalesorderanalytics
+    type: html5
+    path: app/analytics
     build-parameters:
       build-result: dist
       builder: custom
