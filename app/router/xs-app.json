@@ -1,5 +1,5 @@
 {
-  "welcomeFile": "/printfloworders/index.html",
+  "welcomeFile": "/index.html",
   "authenticationMethod": "route",
   "responseHeaders": [
     {
@@ -8,6 +8,11 @@
     }
   ],
   "routes": [
+    {
+      "source": "^/index.html$",
+      "localDir": ".",
+      "authenticationType": "xsuaa"
+    },
     {
       "source": "^/odata/(.*)$",
       "target": "/odata/$1",

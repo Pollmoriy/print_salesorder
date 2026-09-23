@@ -57,6 +57,8 @@ sap.ui.define([
     onScheduleDelivery: async function (oBindingContext, aSelectedContexts) {
       _oOrderContext = oBindingContext;
       const oDialog = await getDialog();
+      const oDatePicker = Element.getElementById("deliveryDatePicker");
+      if (oDatePicker) oDatePicker.setMinDate(new Date());
       oDialog.open();
     }
   };

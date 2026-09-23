@@ -63,6 +63,8 @@ sap.ui.define([
     onRegisterPayment: async function (oBindingContext, aSelectedContexts) {
       _oOrderContext = oBindingContext;
       const oDialog = await getDialog();
+      const oDatePicker = Element.getElementById("paymentDatePicker");
+      if (oDatePicker) oDatePicker.setMaxDate(new Date());
       oDialog.open();
     }
   };

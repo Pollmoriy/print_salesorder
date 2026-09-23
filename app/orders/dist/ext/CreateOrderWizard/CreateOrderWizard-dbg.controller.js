@@ -13,12 +13,12 @@ sap.ui.define([
 
     onInit: function () {
       PageController.prototype.onInit.apply(this, arguments);
-
-      // Привязываем слушатель событий роутера
       const oRouter = this.getAppComponent().getRouter();
       oRouter.getRoute("CreateOrderWizard").attachPatternMatched(this._onRouteMatched, this);
-
       this._initDraftModel();
+
+      const oDatePicker = this.byId("requestedDeliveryDatePicker");
+      if (oDatePicker) oDatePicker.setMinDate(new Date());
     },
 
     _initDraftModel: function () {

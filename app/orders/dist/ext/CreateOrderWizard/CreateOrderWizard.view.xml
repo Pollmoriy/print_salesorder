@@ -27,7 +27,11 @@
               <core:Item key="URGENT" text="Urgent"/>
             </Select>
             <Label text="{i18n>requestedDeliveryDate}"/>
-            <DatePicker value="{draft>/requestedDeliveryDate}" valueFormat="yyyy-MM-dd" displayFormat="medium"/>
+            <DatePicker id="requestedDeliveryDatePicker"
+              value="{draft>/requestedDeliveryDate}"
+              valueFormat="yyyy-MM-dd"
+              displayFormat="medium"
+              minDate="{= new Date() }"/>
           </f:SimpleForm>
         </WizardStep>
 
