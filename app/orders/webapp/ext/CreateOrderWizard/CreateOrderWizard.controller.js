@@ -18,7 +18,9 @@ sap.ui.define([
       this._initDraftModel();
 
       const oDatePicker = this.byId("requestedDeliveryDatePicker");
-      if (oDatePicker) oDatePicker.setMinDate(new Date());
+      if (oDatePicker) {
+        oDatePicker.setMinDate(new Date());
+      }
     },
 
     _initDraftModel: function () {

@@ -30,8 +30,7 @@
             <DatePicker id="requestedDeliveryDatePicker"
               value="{draft>/requestedDeliveryDate}"
               valueFormat="yyyy-MM-dd"
-              displayFormat="medium"
-              minDate="{= new Date() }"/>
+              displayFormat="medium"/>
           </f:SimpleForm>
         </WizardStep>
 
