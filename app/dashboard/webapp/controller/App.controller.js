@@ -6,10 +6,11 @@ sap.ui.define([
   "sap/m/Panel",
   "sap/m/Title",
   "sap/m/Text",
+  "sap/m/Link",
   "sap/m/ObjectStatus",
   "sap/ui/core/Icon",
   "sap/ui/core/library"
-], function (Controller, JSONModel, VBox, HBox, Panel, Title, Text, ObjectStatus, Icon, coreLibrary) {
+], function (Controller, JSONModel, VBox, HBox, Panel, Title, Text, Link, ObjectStatus, Icon, coreLibrary) {
   "use strict";
 
   const ValueState = coreLibrary.ValueState;
@@ -161,19 +162,13 @@ sap.ui.define([
       const oNow = new Date();
 
       const aOverdueOrders = aOrders.filter((o) =>
-        o.requestedDeliveryDate &&
-        o.requestedDeliveryDate < sToday &&
-        o.status !== "DELIVERED" &&
-        o.status !== "CANCELLED"
+        o.requestedDeliveryDate && o.requestedDeliveryDate < sToday &&
+        o.status !== "DELIVERED" && o.status !== "CANCELLED"
       );
-
       const aCriticalMaterials = aMaterials.filter((m) => m.status === "CRITICAL");
-
       const aDelayedProductions = aProductionOrders.filter((p) =>
-        p.plannedEnd &&
-        new Date(p.plannedEnd) < oNow &&
-        p.status !== "COMPLETED" &&
-        p.status !== "CANCELLED"
+        p.plannedEnd && new Date(p.plannedEnd) < oNow &&
+        p.status !== "COMPLETED" && p.status !== "CANCELLED"
       );
 
       const oContainer = this.byId("attentionContainer");
@@ -186,20 +181,31 @@ sap.ui.define([
       }
 
       if (aOverdueOrders.length) {
-        oContainer.addItem(this._buildAttentionRow("sap-icon://alert", "#bb0000", `${aOverdueOrders.length} overdue orders`));
+        oContainer.addItem(this._buildAttentionRow("sap-icon://alert", "#bb0000",
+          `${aOverdueOrders.length} overdue orders`, "/printfloworders/index.html"));
       }
       if (aCriticalMaterials.length) {
-        oContainer.addItem(this._buildAttentionRow("sap-icon://warning", "#e9730c", `${aCriticalMaterials.length} critical materials`));
+        oContainer.addItem(this._buildAttentionRow("sap-icon://warning", "#e9730c",
+          `${aCriticalMaterials.length} critical materials`, "/printflowmaterials/index.html"));
       }
       if (aDelayedProductions.length) {
-        oContainer.addItem(this._buildAttentionRow("sap-icon://pending", "#e9730c", `${aDelayedProductions.length} delayed productions`));
+        oContainer.addItem(this._buildAttentionRow("sap-icon://pending", "#e9730c",
+          `${aDelayedProductions.length} delayed productions`, "/printflowproductionboard/index.html"));
       }
     },
 
-    _buildAttentionRow: function (sIcon, sColor, sText) {
+    _buildAttentionRow: function (sIcon, sColor, sText, sTargetUrl) {
       const oRow = new HBox({ alignItems: "Center" }).addStyleClass("attentionRow");
-      oRow.addItem(new Icon({ src: sIcon, color: sColor, size: "1.1rem", tooltip: sText }).addStyleClass("attentionIcon"));
-      oRow.addItem(new Text({ text: sText }));
+      oRow.addItem(new Icon({ src: sIcon, color: sColor, size: "1.1rem" }).addStyleClass("attentionIcon"));
+
+      if (sTargetUrl) {
+        oRow.addItem(new Link({
+          text: sText,
+          press: () => { window.location.href = `${window.location.origin}${sTargetUrl}`; }
+        }));
+      } else {
+        oRow.addItem(new Text({ text: sText }));
+      }
       return oRow;
     },
 

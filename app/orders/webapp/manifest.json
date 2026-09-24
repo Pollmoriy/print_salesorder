@@ -149,6 +149,16 @@
               "editableHeaderContent": false,
               "contextPath": "/SalesOrders",
               "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.Identification": {
+                  "actions": {
+                    "OpenCustomerAction": {
+                      "press": "printflow.orders.ext.CustomerLink.CustomerLinkActions.onOpenCustomer",
+                      "text": "{i18n>openCustomer}",
+                      "icon": "sap-icon://customer",
+                      "requiresSelection": false
+                    }
+                  }
+                },
                 "items/@com.sap.vocabularies.UI.v1.LineItem": {
                   "actions": {
                     "CheckMaterialsAction": {

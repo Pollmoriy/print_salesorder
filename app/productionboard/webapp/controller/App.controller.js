@@ -6,12 +6,13 @@ sap.ui.define([
   "sap/m/Panel",
   "sap/m/Title",
   "sap/m/Text",
+  "sap/m/Link",
   "sap/m/ObjectStatus",
   "sap/m/Toolbar",
   "sap/m/Button",
   "sap/m/MessageToast",
   "sap/ui/core/library"
-], function (Controller, VBox, HBox, Icon, Panel, Title, Text, ObjectStatus, Toolbar, Button, MessageToast, coreLibrary) {
+], function (Controller, VBox, HBox, Icon, Panel, Title, Text, Link, ObjectStatus, Toolbar, Button, MessageToast, coreLibrary) {
   "use strict";
 
   const ValueState = coreLibrary.ValueState;
@@ -74,16 +75,44 @@ sap.ui.define([
 
       try {
         const aContexts = await oBinding.requestContexts(0, 1000);
-        const aOrders = aContexts.map((oCtx) => oCtx.getObject());
-        this._renderBoard(aOrders);
+        this._aAllOrders = aContexts.map((oCtx) => oCtx.getObject());  // NEW: храним нефильтрованный список
+        this._applyFilters();                                          // NEW: рендерим через фильтр
       } catch (oError) {
-        // eslint-disable-next-line no-console
         console.error("Failed to load ProductionOrders:", oError);
       }
     },
 
+    onSearch: function (oEvent) {
+      this._sSearchQuery = (oEvent.getParameter("newValue") || "").toUpperCase().trim();
+      this._applyFilters();
+    },
+
+    onFilterChange: function () {
+      const oSelect = this.byId("urgencyFilter");
+      this._sUrgencyFilter = oSelect ? oSelect.getSelectedKey() : "";
+      this._applyFilters();
+    },
+
+    _applyFilters: function () {
+      let aFiltered = this._aAllOrders || [];
+
+      if (this._sSearchQuery) {
+        aFiltered = aFiltered.filter((o) =>
+          (o.parent?.orderNo || "").toUpperCase().includes(this._sSearchQuery)
+        );
+      }
+      if (this._sUrgencyFilter) {
+        aFiltered = aFiltered.filter((o) => o.parent?.urgencyLevel === this._sUrgencyFilter);
+      }
+
+      this._renderBoard(aFiltered);
+    },
+
     _renderBoard: function (aOrders) {
       const oContainer = this.byId("boardContainer");
+      if (!oContainer) {
+        return;
+      }
       oContainer.destroyItems();
 
       COLUMNS.forEach((oColumnDef) => {
@@ -93,7 +122,7 @@ sap.ui.define([
     },
 
     _buildColumn: function (oColumnDef, aColumnOrders) {
-      const oColumn = new VBox({ class: "boardColumn" }).addStyleClass("boardColumn");
+      const oColumn = new VBox().addStyleClass("boardColumn")
 
       oColumn.addItem(new Title({
         text: `${oColumnDef.label} (${aColumnOrders.length})`,
@@ -118,11 +147,21 @@ sap.ui.define([
         ? `${oFirstItem.quantity} × ${oFirstItem.product.name}`
         : "—";
 
-      const oCard = new Panel({ class: "boardCard" }).addStyleClass("boardCard");
+      const oCard = new Panel().addStyleClass("boardCard");
 
       const oOrderNoRow = new HBox({ alignItems: "Center" }).addStyleClass("boardCardOrderNoRow");
       oOrderNoRow.addItem(new Icon({ src: "sap-icon://sales-order", size: "0.9rem" }).addStyleClass("boardCardOrderIcon"));
-      oOrderNoRow.addItem(new Text({ text: oParent.orderNo || "—" }).addStyleClass("boardCardOrderNo"));
+
+      if (oOrder.parent_ID) {
+        oOrderNoRow.addItem(new Link({
+          text: oParent.orderNo || "—",
+          press: () => {
+            window.location.href = `${window.location.origin}/printfloworders/index.html#/SalesOrders(ID=${oOrder.parent_ID},IsActiveEntity=true)`;
+          }
+        }).addStyleClass("boardCardOrderNo"));
+      } else {
+        oOrderNoRow.addItem(new Text({ text: oParent.orderNo || "—" }).addStyleClass("boardCardOrderNo"));
+      }
       oCard.addContent(oOrderNoRow);
       oCard.addContent(new Text({ text: sProductLine }));
       oCard.addContent(new ObjectStatus({

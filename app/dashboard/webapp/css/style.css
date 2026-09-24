@@ -199,3 +199,48 @@ Output
 .boardCardOrderIcon {
   color: #6a6d70;
 }
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active,
+a:focus,
+.sapMLnk,
+.sapMLnk:link,
+.sapMLnk:visited,
+.sapMLnk:hover,
+.sapMLnk:active,
+.sapMLnk:focus,
+.sapMLnkActive,
+.sapMLnkHover {
+  color: inherit !important;
+  text-decoration: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  border: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.boardCardOrderNo,
+.boardCardOrderNoRow,
+.boardCardOrderNoRow *,
+.recentOrderNo,
+.recentOrderRow a,
+.attentionRow a {
+  color: inherit !important;
+  text-decoration: none !important;
+  background: transparent !important;
+}
+
+.board {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding: 1rem;
+  min-height: 500px;
+  width: 100%;
+}

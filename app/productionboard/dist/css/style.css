@@ -82,3 +82,6 @@
 .boardCardOrderIcon {
   color: #6a6d70;
 }
+
+.sapUiPointer { cursor: pointer; }
+.boardCardOrderNoRow:hover { opacity: 0.75; }

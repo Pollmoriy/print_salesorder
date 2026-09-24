@@ -1,0 +1,2 @@
+sap.ui.define([],function(){"use strict";return{onOpenCustomer:function(t){if(!t)return;const n=t.getObject().customer_ID;if(!n)return;window.location.href=`${window.location.origin}/printflowcustomers/index.html#/Customers(ID=${n},IsActiveEntity=true)`}}});
+//# sourceMappingURL=CustomerLinkActions.js.map

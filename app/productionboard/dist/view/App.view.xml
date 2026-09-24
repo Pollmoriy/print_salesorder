@@ -2,16 +2,27 @@
     controllerName="printflow.productionboard.controller.App"
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
     displayBlock="true">
-    <App>
+    <App id="app">
         <Page title="{i18n>pageTitle}" showHeader="true" class="sapUiContentPadding">
+            <headerContent>
+                <SearchField id="boardSearch" width="240px" liveChange="onSearch" placeholder="Search by order no..."/>
+                <Label text="Urgency:" class="sapUiTinyMarginBegin sapUiTinyMarginEnd"/>
+                <Select id="urgencyFilter" change="onFilterChange">
+                    <core:Item key="" text="All"/>
+                    <core:Item key="STANDARD" text="Standard"/>
+                    <core:Item key="EXPRESS" text="Express"/>
+                    <core:Item key="URGENT" text="Urgent"/>
+                </Select>
+            </headerContent>
             <content>
-                <ScrollContainer horizontal="true" vertical="false" height="100%" width="100%">
+                <ScrollContainer horizontal="true" vertical="true" height="100%" width="100%">
                     <HBox 
                         id="boardContainer" 
                         class="board"
-                        justifyContent="Center"
-                        alignItems="Center"/>
+                        justifyContent="Start"
+                        alignItems="Start"/>
                 </ScrollContainer>
             </content>
         </Page>
